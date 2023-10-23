@@ -1,0 +1,7 @@
+fint:
+  security:
+    enabled: false
+  consumer:
+    domain: utdanning
+    package: vurdering
+    org-id: fintlabs.no
