@@ -1,4 +1,4 @@
-package no.fint.model.utdanning.vurdering;
+package no.fintlabs.model;
 
 import java.util.Arrays;
 import java.util.List;

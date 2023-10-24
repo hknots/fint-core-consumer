@@ -1,14 +1,15 @@
-package no.fint.model.utdanning.vurdering;
+package no.fintlabs.model;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
-import java.util.List;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 import no.fint.model.FintComplexDatatypeObject;
 import no.fint.model.felles.kompleksedatatyper.Periode;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
@@ -16,10 +17,10 @@ import no.fint.model.felles.kompleksedatatyper.Periode;
 @ToString
 public class Fravarsregistrering implements FintComplexDatatypeObject {
     public enum Relasjonsnavn {
-            REGISTRERTAV,
-            FAGGRUPPE,
-            UNDERVISNINGSGRUPPE,
-            FRAVARSTYPE
+        REGISTRERTAV,
+        FAGGRUPPE,
+        UNDERVISNINGSGRUPPE,
+        FRAVARSTYPE
     }
 
     @NotNull

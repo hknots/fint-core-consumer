@@ -2,8 +2,8 @@ package no.fintlabs.library;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import no.fint.model.FintMainObject;
 import no.fintlabs.library.config.ConsumerConfig;
+import no.fintlabs.model.FintMainObject;
 import org.reflections.Reflections;
 import org.springframework.stereotype.Component;
 

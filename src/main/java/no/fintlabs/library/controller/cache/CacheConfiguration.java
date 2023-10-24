@@ -1,8 +1,8 @@
 package no.fintlabs.library.controller.cache;
 
-import no.fint.model.FintMainObject;
 import no.fintlabs.cache.Cache;
 import no.fintlabs.library.ReflectionService;
+import no.fintlabs.model.FintMainObject;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

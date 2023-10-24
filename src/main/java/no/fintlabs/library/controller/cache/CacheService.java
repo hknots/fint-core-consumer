@@ -1,9 +1,9 @@
 package no.fintlabs.library.controller.cache;
 
-import no.fint.model.FintMainObject;
 import no.fintlabs.cache.Cache;
 import no.fintlabs.library.ReflectionService;
 import no.fintlabs.library.config.ConsumerConfig;
+import no.fintlabs.model.FintMainObject;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;

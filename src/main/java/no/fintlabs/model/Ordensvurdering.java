@@ -1,14 +1,15 @@
-package no.fint.model.utdanning.vurdering;
+package no.fintlabs.model;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
-import java.util.List;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 import no.fint.model.FintAbstractObject;
 import no.fint.model.felles.kompleksedatatyper.Identifikator;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Data
@@ -17,9 +18,9 @@ import java.util.Date;
 @ToString
 public abstract class Ordensvurdering implements FintAbstractObject {
     public enum Relasjonsnavn {
-            ATFERD,
-            ORDEN,
-            SKOLEAR
+        ATFERD,
+        ORDEN,
+        SKOLEAR
     }
 
     @NotBlank

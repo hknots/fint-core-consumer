@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import no.fintlabs.core.resource.server.security.CorePrincipal;
 import no.fintlabs.library.config.ConfigConstants;
 import no.fintlabs.library.controller.cache.CacheService;
+import no.fintlabs.model.FintMainObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -24,20 +25,20 @@ public class FintController {
     }
 
     @GetMapping
-    public Mono<ResponseEntity<AbstractCollection<?>>> getResources(@AuthenticationPrincipal CorePrincipal corePrincipal,
-                                                                    @PathVariable String resource,
-                                                                    @RequestParam(defaultValue = "0") long sinceTimeStamp,
-                                                                    @RequestParam(defaultValue = "0") int size,
-                                                                    @RequestParam(defaultValue = "0") int offset,
-                                                                    @RequestParam(required = false) String $filter) {
+    public Mono<ResponseEntity<AbstractCollection<? extends FintMainObject>>> getResources(@AuthenticationPrincipal CorePrincipal corePrincipal,
+                                                                                           @PathVariable String resource,
+                                                                                           @RequestParam(defaultValue = "0") long sinceTimeStamp,
+                                                                                           @RequestParam(defaultValue = "0") int size,
+                                                                                           @RequestParam(defaultValue = "0") int offset,
+                                                                                           @RequestParam(required = false) String $filter) {
         return Mono.just(ResponseEntity.ok().build());
     }
 
     @GetMapping("/{idName}/{idValue:.+}")
-    public Mono<ResponseEntity<?>> handleDynamicGet(@AuthenticationPrincipal CorePrincipal coreprincipal,
-                                                    @PathVariable String resource,
-                                                    @PathVariable String idName,
-                                                    @PathVariable String idValue) {
+    public Mono<ResponseEntity<? extends FintMainObject>> getResource(@AuthenticationPrincipal CorePrincipal coreprincipal,
+                                                                      @PathVariable String resource,
+                                                                      @PathVariable String idName,
+                                                                      @PathVariable String idValue) {
         return Mono.just(ResponseEntity.ok().build());
     }
 
