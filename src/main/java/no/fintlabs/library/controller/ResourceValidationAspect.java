@@ -20,7 +20,7 @@ public class ResourceValidationAspect {
     private final Set<String> resources;
 
     public ResourceValidationAspect(ReflectionService reflectionService) {
-        resources = reflectionService.getFilteredClassNames();
+        resources = reflectionService.getClassMap().keySet();
     }
 
     @Pointcut(value = "execution(* no.fintlabs.library.controller.FintController.*(..)) && args(corePrincipal, resource, ..)",
