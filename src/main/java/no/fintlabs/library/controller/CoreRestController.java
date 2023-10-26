@@ -16,11 +16,11 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping(ConfigConstants.RESOURCE_PATH)
-public class FintController {
+public class CoreRestController {
 
     private final CacheService cacheService;
 
-    public FintController(CacheService cacheService) {
+    public CoreRestController(CacheService cacheService) {
         this.cacheService = cacheService;
     }
 
@@ -34,7 +34,7 @@ public class FintController {
         return Mono.just(ResponseEntity.ok().build());
     }
 
-    @GetMapping("/{idName}/{idValue:.+}")
+    @GetMapping("/{idName}/{idValue}")
     public Mono<ResponseEntity<? extends FintMainObject>> getResource(@AuthenticationPrincipal CorePrincipal coreprincipal,
                                                                       @PathVariable String resource,
                                                                       @PathVariable String idName,

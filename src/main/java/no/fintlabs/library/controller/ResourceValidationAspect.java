@@ -7,6 +7,7 @@ import no.fintlabs.library.controller.exceptions.ResourceNotFoundException;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -15,6 +16,7 @@ import java.util.Set;
 @Aspect
 @Slf4j
 @Component
+@Order(1)
 public class ResourceValidationAspect {
 
     private final Set<String> resources;
@@ -23,7 +25,7 @@ public class ResourceValidationAspect {
         resources = reflectionService.getClassMap().keySet();
     }
 
-    @Pointcut(value = "execution(* no.fintlabs.library.controller.FintController.*(..)) && args(corePrincipal, resource, ..)",
+    @Pointcut(value = "execution(* no.fintlabs.library.controller.CoreRestController.*(..)) && args(corePrincipal, resource, ..)",
             argNames = "corePrincipal,resource")
     public void allControllerMethods(CorePrincipal corePrincipal, String resource) {
     }
