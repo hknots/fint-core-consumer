@@ -31,9 +31,7 @@ public class ResourceValidationAspect {
     @Before(value = "allControllerMethods(corePrincipal, resource)",
             argNames = "corePrincipal,resource")
     public void validateResourceBeforeMethod(CorePrincipal corePrincipal, String resource) {
-        String username = Optional.ofNullable(corePrincipal)
-                .map(CorePrincipal::getUsername)
-                .orElse("localhost");
+        String username = getUsername(corePrincipal);
 
         log.debug("Validating for user: [{}] on resource: [{}]", username, resource);
         validateIfResourceExists(username, resource);
@@ -45,6 +43,12 @@ public class ResourceValidationAspect {
             throw new ResourceNotFoundException(resource);
         }
         log.debug("Resource validated successfully for user: [{}] - [{}]", username, resource);
+    }
+
+    private String getUsername(CorePrincipal corePrincipal) {
+        return Optional.ofNullable(corePrincipal)
+                .map(CorePrincipal::getUsername)
+                .orElse("localhost");
     }
 
 }
