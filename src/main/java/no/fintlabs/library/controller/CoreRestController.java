@@ -1,10 +1,10 @@
 package no.fintlabs.library.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import no.fint.model.FintMainObject;
 import no.fintlabs.core.resource.server.security.CorePrincipal;
 import no.fintlabs.library.config.ConfigConstants;
 import no.fintlabs.library.controller.cache.CacheService;
-import no.fintlabs.model.FintMainObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;

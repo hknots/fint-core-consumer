@@ -3,5 +3,5 @@ fint:
     enabled: false
   consumer:
     domain: utdanning
-    package: vurdering
+    package: elev
     org-id: fintlabs.no
