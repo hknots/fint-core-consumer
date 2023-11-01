@@ -35,10 +35,10 @@ public class CoreRestController {
     }
 
     @GetMapping("/{idField}/{idValue}")
-    public Mono<ResponseEntity<? extends FintMainObject>> getResource(@AuthenticationPrincipal CorePrincipal coreprincipal,
-                                                                      @PathVariable String resource,
-                                                                      @PathVariable String idField,
-                                                                      @PathVariable String idValue) {
+    public Mono<ResponseEntity<? extends FintMainObject>> getResourceById(@AuthenticationPrincipal CorePrincipal coreprincipal,
+                                                                          @PathVariable String resource,
+                                                                          @PathVariable String idField,
+                                                                          @PathVariable String idValue) {
         return Mono.just(ResponseEntity.ok().build());
     }
 
