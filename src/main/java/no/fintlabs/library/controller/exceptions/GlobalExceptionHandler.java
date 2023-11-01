@@ -13,4 +13,9 @@ public class GlobalExceptionHandler {
         return Mono.just(ResponseEntity.notFound().build());
     }
 
+    @ExceptionHandler(IdentificatorNotFoundException.class)
+    public Mono<ResponseEntity<String>> handleResourceNotFound(IdentificatorNotFoundException ex) {
+        return Mono.just(ResponseEntity.notFound().build());
+    }
+
 }
