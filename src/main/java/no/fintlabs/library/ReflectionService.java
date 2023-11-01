@@ -47,7 +47,7 @@ public class ReflectionService {
         for (Class<?> currentClass = clazz; currentClass != null; currentClass = currentClass.getSuperclass()) {
             for (Field field : currentClass.getDeclaredFields()) {
                 if (field.getType().equals(Identifikator.class)) {
-                    identifikatorFieldNames.add(field.getName());
+                    identifikatorFieldNames.add(field.getName().toLowerCase());
                 }
             }
         }
