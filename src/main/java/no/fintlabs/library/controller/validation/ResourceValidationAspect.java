@@ -1,4 +1,4 @@
-package no.fintlabs.library.controller;
+package no.fintlabs.library.controller.validation;
 
 import lombok.extern.slf4j.Slf4j;
 import no.fintlabs.core.resource.server.security.CorePrincipal;
