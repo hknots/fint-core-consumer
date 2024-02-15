@@ -19,10 +19,16 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven {
+        url("https://repo.fintlabs.no/releases")
+    }
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    implementation 'org.reflections:reflections:0.10.2'
+
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
