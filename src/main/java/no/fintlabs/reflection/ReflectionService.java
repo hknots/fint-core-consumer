@@ -26,6 +26,7 @@ public class ReflectionService {
         return new Reflections(getFullPackageName()).getSubTypesOf(FintMainObject.class);
     }
 
+    // TODO: Add common entities as well
     @Bean("resourceNames")
     public Set<String> resourceNames(Set<Class<? extends FintMainObject>> resources) {
         return resources.stream()
