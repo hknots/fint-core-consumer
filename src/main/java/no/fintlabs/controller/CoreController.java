@@ -13,7 +13,8 @@ import java.util.Map;
 import static no.fintlabs.config.EndPoints.*;
 
 @Slf4j
-@RestController(COMPONENT)
+@RequestMapping(COMPONENT)
+@RestController
 public class CoreController {
 
     @GetMapping(RESOURCE)
