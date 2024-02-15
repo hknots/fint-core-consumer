@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -23,6 +24,13 @@ public class ReflectionService {
     @Bean
     public Set<Class<? extends FintMainObject>> resources() {
         return new Reflections(getFullPackageName()).getSubTypesOf(FintMainObject.class);
+    }
+
+    @Bean("resourceNames")
+    public Set<String> resourceNames(Set<Class<? extends FintMainObject>> resources) {
+        return resources.stream()
+                .map(clazz -> clazz.getSimpleName().toLowerCase())
+                .collect(Collectors.toUnmodifiableSet());
     }
 
 }
