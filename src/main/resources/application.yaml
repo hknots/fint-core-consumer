@@ -1,0 +1,4 @@
+fint:
+  consumer:
+    domain: utdanning
+    package: elev
