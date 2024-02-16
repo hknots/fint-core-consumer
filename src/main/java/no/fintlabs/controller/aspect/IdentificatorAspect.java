@@ -1,4 +1,4 @@
-package no.fintlabs.controller;
+package no.fintlabs.controller.aspect;
 
 import lombok.extern.slf4j.Slf4j;
 import no.fintlabs.exception.exceptions.IdentificatorFieldNotFound;
