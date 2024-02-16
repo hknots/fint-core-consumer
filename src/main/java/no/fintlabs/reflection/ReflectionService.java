@@ -7,6 +7,10 @@ import org.reflections.Reflections;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,6 +36,27 @@ public class ReflectionService {
         return resources.stream()
                 .map(clazz -> clazz.getSimpleName().toLowerCase())
                 .collect(Collectors.toUnmodifiableSet());
+    }
+
+    @Bean("identificatorNames")
+    public Map<String, Set<String>> identificatorNames(Set<Class<? extends FintMainObject>> resources) {
+        return resources.stream()
+                .collect(Collectors.toMap(
+                        clazz -> clazz.getSimpleName().toLowerCase(),
+                        this::getIdentifikatorNames,
+                        (existing, replacement) -> existing,
+                        LinkedHashMap::new
+                ));
+    }
+
+    private Set<String> getIdentifikatorNames(Class<? extends FintMainObject> clazz) {
+        try {
+            FintMainObject instance = clazz.getDeclaredConstructor().newInstance();
+            return instance.getIdentifikators().keySet();
+        } catch (InstantiationException | IllegalAccessException
+                 | NoSuchMethodException | InvocationTargetException e) {
+            return Collections.emptySet();
+        }
     }
 
 }
