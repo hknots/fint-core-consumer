@@ -4,13 +4,15 @@ import lombok.extern.slf4j.Slf4j;
 import no.fintlabs.exception.exceptions.ResourceNotFoundException;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
-@Aspect
-@Component
 @Slf4j
+@Component
+@Aspect
+@Order(0)
 public class ResourceAspect {
 
     private final Set<String> resourceNames;
@@ -26,4 +28,5 @@ public class ResourceAspect {
             throw new ResourceNotFoundException();
         }
     }
+
 }
