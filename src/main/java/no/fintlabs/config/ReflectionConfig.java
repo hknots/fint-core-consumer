@@ -1,11 +1,10 @@
-package no.fintlabs.reflection;
+package no.fintlabs.config;
 
 import lombok.RequiredArgsConstructor;
 import no.fint.model.FintMainObject;
-import no.fintlabs.config.ConsumerConfig;
 import org.reflections.Reflections;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Configuration;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
@@ -15,9 +14,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
-@Service
+@Configuration
 @RequiredArgsConstructor
-public class ReflectionService {
+public class ReflectionConfig {
 
     private final ConsumerConfig props;
 
