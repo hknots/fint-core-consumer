@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.fint.event.model.EventResponse;
 import no.fint.model.FintMainObject;
+import no.fintlabs.controller.cache.CacheObject;
+import no.fintlabs.controller.cache.CoreCache;
 import no.fintlabs.controller.cache.ResourceCache;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +33,12 @@ public class CoreController {
     public ResponseEntity<FintMainObject> resourceById(@PathVariable String resource,
                                                        @PathVariable String idField,
                                                        @PathVariable String idValue) {
-        return null;
+        CoreCache container = resourceCache.getContainer(resource);
+        CacheObject byId = container.findById(idField, idValue);
+        if (byId != null) {
+            return ResponseEntity.ok(byId.getResource());
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping(RESOURCE_LAST_UPDATED)
