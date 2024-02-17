@@ -2,3 +2,7 @@ fint:
   consumer:
     domain: utdanning
     package: elev
+
+logging:
+  level:
+    no.fintlabs: TRACE
