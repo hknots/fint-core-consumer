@@ -33,10 +33,9 @@ public class CoreController {
     public ResponseEntity<FintMainObject> resourceById(@PathVariable String resource,
                                                        @PathVariable String idField,
                                                        @PathVariable String idValue) {
-        CoreCache container = resourceCache.getContainer(resource);
-        CacheObject byId = container.findById(idField, idValue);
-        if (byId != null) {
-            return ResponseEntity.ok(byId.getResource());
+        CacheObject cacheObject = resourceCache.getContainer(resource).findById(idField, idValue);
+        if (cacheObject != null) {
+            return ResponseEntity.ok(cacheObject.getResource());
         }
         return ResponseEntity.notFound().build();
     }
