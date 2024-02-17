@@ -1,10 +1,11 @@
 package no.fintlabs.controller;
 
-import com.google.common.collect.ImmutableMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.fint.event.model.EventResponse;
 import no.fint.model.FintMainObject;
+import no.fint.model.felles.kompleksedatatyper.Identifikator;
+import no.fint.model.utdanning.elev.Elev;
 import no.fintlabs.controller.cache.CacheObject;
 import no.fintlabs.controller.cache.ResourceCache;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,11 @@ public class CoreController {
 
     @GetMapping(RESOURCE)
     public ResponseEntity<AbstractCollection<FintMainObject>> allResources(@PathVariable String resource) {
+        Elev elev = new Elev();
+        Identifikator identifikator = new Identifikator();
+        identifikator.setIdentifikatorverdi("123");
+        elev.setBrukernavn(identifikator);
+        resourceCache.getContainer(resource).put(elev);
         return null;
     }
 
@@ -45,8 +51,8 @@ public class CoreController {
     }
 
     @GetMapping(RESOURCE_CACHE_SIZE)
-    public ResponseEntity<ImmutableMap<String, Integer>> resourceCacheSize(@PathVariable String resource) {
-        return null;
+    public ResponseEntity<Map<String, Long>> resourceCacheSize(@PathVariable String resource) {
+        return ResponseEntity.ok(Map.of(resource, resourceCache.getContainer(resource).getCacheSize().get()));
     }
 
     @GetMapping(RESOURCE_STATUS_ID)

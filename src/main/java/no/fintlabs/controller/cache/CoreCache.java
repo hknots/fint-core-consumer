@@ -7,12 +7,16 @@ import no.fint.model.FintMainObject;
 
 import javax.annotation.Nullable;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 @ToString
 @Slf4j
 public class CoreCache {
 
     private final ConcurrentHashMap<String, ConcurrentHashMap<String, CacheObject>> objectMapper;
+
+    @Getter
+    private final AtomicLong cacheSize = new AtomicLong(0);
 
     @Getter
     private volatile long lastUpdated;
@@ -28,6 +32,7 @@ public class CoreCache {
             if (identifikator != null) {
                 objectMapper.get(idField).put(identifikator.getIdentifikatorverdi(), cacheObject);
                 lastUpdated = System.currentTimeMillis();
+                cacheSize.incrementAndGet();
             }
         });
     }
