@@ -52,7 +52,7 @@ public class CoreController {
 
     @GetMapping(RESOURCE_CACHE_SIZE)
     public ResponseEntity<Map<String, Long>> resourceCacheSize(@PathVariable String resource) {
-        return ResponseEntity.ok(Map.of(resource, resourceCache.getContainer(resource).getCacheSize().get()));
+        return ResponseEntity.ok(Map.of("size", resourceCache.getContainer(resource).getCacheSize().get()));
     }
 
     @GetMapping(RESOURCE_STATUS_ID)
