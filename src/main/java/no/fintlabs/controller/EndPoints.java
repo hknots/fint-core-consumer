@@ -1,4 +1,4 @@
-package no.fintlabs.config;
+package no.fintlabs.controller;
 
 public class EndPoints {
 

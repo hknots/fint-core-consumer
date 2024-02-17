@@ -1,21 +1,26 @@
 package no.fintlabs.controller;
 
 import com.google.common.collect.ImmutableMap;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.fint.event.model.EventResponse;
 import no.fint.model.FintMainObject;
+import no.fintlabs.controller.cache.ResourceCache;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.AbstractCollection;
 import java.util.Map;
 
-import static no.fintlabs.config.EndPoints.*;
+import static no.fintlabs.controller.EndPoints.*;
 
 @Slf4j
 @RequestMapping(COMPONENT)
 @RestController
+@RequiredArgsConstructor
 public class CoreController {
+
+    private final ResourceCache resourceCache;
 
     @GetMapping(RESOURCE)
     public ResponseEntity<AbstractCollection<FintMainObject>> allResources(@PathVariable String resource) {
