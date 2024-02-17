@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import no.fint.event.model.EventResponse;
 import no.fint.model.FintMainObject;
 import no.fintlabs.controller.cache.CacheObject;
-import no.fintlabs.controller.cache.CoreCache;
 import no.fintlabs.controller.cache.ResourceCache;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,8 +40,8 @@ public class CoreController {
     }
 
     @GetMapping(RESOURCE_LAST_UPDATED)
-    public ResponseEntity<Map<String, String>> resourceLastUpdated(@PathVariable String resource) {
-        return null;
+    public ResponseEntity<Map<String, Long>> resourceLastUpdated(@PathVariable String resource) {
+        return ResponseEntity.ok(Map.of("lastUpdated", resourceCache.getContainer(resource).getLastUpdated()));
     }
 
     @GetMapping(RESOURCE_CACHE_SIZE)
