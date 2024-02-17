@@ -59,7 +59,8 @@ public class CoreController {
     @PutMapping(RESOURCE_ID)
     public ResponseEntity<Void> putResource(@PathVariable String resource,
                                             @PathVariable String idField,
-                                            @PathVariable String idValue) {
+                                            @PathVariable String idValue,
+                                            @RequestBody Map<String, Object> request) {
         return null;
     }
 
