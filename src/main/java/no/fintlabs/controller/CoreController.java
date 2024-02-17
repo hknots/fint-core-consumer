@@ -56,8 +56,8 @@ public class CoreController {
     }
 
     @GetMapping(RESOURCE_STATUS_ID)
-    public ResponseEntity<EventResponse> resourceCacheSize(@PathVariable String resource,
-                                                           @PathVariable String idValue) {
+    public ResponseEntity<EventResponse> resourceStatusId(@PathVariable String resource,
+                                                          @PathVariable String idValue) {
         return null;
     }
 
