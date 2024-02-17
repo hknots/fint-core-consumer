@@ -1,5 +1,7 @@
 package no.fint.model.felles.kompleksedatatyper;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -32,7 +34,8 @@ public class Adresse  implements FintComplexDatatypeObject {
         }
     }
 
-
+	
+	@JsonIgnore
 	public Map<String, FintIdentifikator> getIdentifikators() {
     	Map<String, FintIdentifikator> identifikators = new HashMap<>();
     

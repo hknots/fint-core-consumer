@@ -1,32 +1,37 @@
 package no.fint.model.felles.kompleksedatatyper;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import lombok.Getter;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
+import no.fint.model.felles.kompleksedatatyper.Identifikator;
 import no.fint.model.FintComplexDatatypeObject;
 import no.fint.model.FintIdentifikator;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import java.util.HashMap;
-import java.util.Map;
+import no.fint.model.felles.kompleksedatatyper.Periode;
 
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class Identifikator implements FintComplexDatatypeObject, FintIdentifikator {
-
-    public Map<String, FintIdentifikator> getIdentifikators() {
-        Map<String, FintIdentifikator> identifikators = new HashMap<>();
-
-        return identifikators;
-    }
+public class Identifikator  implements FintComplexDatatypeObject, FintIdentifikator {
+	
+	@JsonIgnore
+	public Map<String, FintIdentifikator> getIdentifikators() {
+    	Map<String, FintIdentifikator> identifikators = new HashMap<>();
+    
+    	return identifikators;
+	}
 
 
     private @Valid Periode gyldighetsperiode;
     @NotBlank
     private String identifikatorverdi;
-
 }

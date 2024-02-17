@@ -1,5 +1,7 @@
 package no.fint.model.utdanning.vurdering;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -38,7 +40,8 @@ public class Eksamensgruppemedlemskap extends Gruppemedlemskap  implements FintM
         }
     }
 
-
+	
+	@JsonIgnore
 	public Map<String, FintIdentifikator> getIdentifikators() {
     	Map<String, FintIdentifikator> identifikators = new HashMap<>();
 		identifikators.putAll(super.getIdentifikators());

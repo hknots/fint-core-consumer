@@ -1,5 +1,7 @@
 package no.fint.model.utdanning.basisklasser;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -33,7 +35,8 @@ public abstract class Utdanningsforhold  implements FintAbstractObject {
         }
     }
 
-
+	
+	@JsonIgnore
 	public Map<String, FintIdentifikator> getIdentifikators() {
     	Map<String, FintIdentifikator> identifikators = new HashMap<>();
 		identifikators.put("systemId", this.systemId);

@@ -1,5 +1,7 @@
 package no.fint.model.felles.basisklasser;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -22,7 +24,8 @@ import no.fint.model.felles.basisklasser.Aktor;
 @EqualsAndHashCode(callSuper=true)
 @ToString(callSuper=true)
 public abstract class Enhet extends Aktor  implements FintAbstractObject {
-
+	
+	@JsonIgnore
 	public Map<String, FintIdentifikator> getIdentifikators() {
     	Map<String, FintIdentifikator> identifikators = new HashMap<>();
 		identifikators.putAll(super.getIdentifikators());

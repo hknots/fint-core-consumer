@@ -1,5 +1,7 @@
 package no.fint.model.arkiv.kulturminnevern;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -21,7 +23,8 @@ import no.fint.model.arkiv.noark.Saksmappe;
 @EqualsAndHashCode(callSuper=true)
 @ToString(callSuper=true)
 public class TilskuddFartoy extends Saksmappe  implements FintMainObject {
-
+	
+	@JsonIgnore
 	public Map<String, FintIdentifikator> getIdentifikators() {
     	Map<String, FintIdentifikator> identifikators = new HashMap<>();
 		identifikators.putAll(super.getIdentifikators());

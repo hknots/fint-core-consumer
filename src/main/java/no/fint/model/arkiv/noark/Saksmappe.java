@@ -1,5 +1,7 @@
 package no.fint.model.arkiv.noark;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -40,7 +42,8 @@ public abstract class Saksmappe extends Mappe  implements FintAbstractObject {
         }
     }
 
-
+	
+	@JsonIgnore
 	public Map<String, FintIdentifikator> getIdentifikators() {
     	Map<String, FintIdentifikator> identifikators = new HashMap<>();
 		identifikators.putAll(super.getIdentifikators());

@@ -1,5 +1,7 @@
 package no.fint.model.okonomi.regnskap;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -35,7 +37,8 @@ public class Leverandor  implements FintMainObject {
         }
     }
 
-
+	
+	@JsonIgnore
 	public Map<String, FintIdentifikator> getIdentifikators() {
     	Map<String, FintIdentifikator> identifikators = new HashMap<>();
 		identifikators.put("leverandornummer", this.leverandornummer);

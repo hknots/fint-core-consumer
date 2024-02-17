@@ -1,5 +1,7 @@
 package no.fint.model.utdanning.kodeverk;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -19,7 +21,8 @@ import no.fint.model.FintIdentifikator;
 @EqualsAndHashCode
 @ToString
 public class Grepreferanse  implements FintReference {
-
+	
+	@JsonIgnore
 	public Map<String, FintIdentifikator> getIdentifikators() {
     	Map<String, FintIdentifikator> identifikators = new HashMap<>();
     
