@@ -23,6 +23,7 @@ public class ResourceAspect {
 
     @Before("execution(* no.fintlabs.controller.CoreController.*(..)) && args(resource,..)")
     public void validateResource(String resource) {
+        log.trace("Validating resource: [{}]", resource);
         if (!resourceNames.contains(resource)) {
             log.debug("Resource not found: {}", resource);
             throw new ResourceNotFoundException();

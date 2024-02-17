@@ -24,7 +24,8 @@ public class IdentificatorAspect {
     }
 
     @Before(value = "execution(* no.fintlabs.controller.CoreController.*(..)) && args(resource, idField, ..)")
-    public void validateResource(String resource, String idField) {
+    public void validateIdField(String resource, String idField) {
+        log.trace("Validating idField: [{}] for [{}]", idField, resource);
         if (!identificatorMap.get(resource).contains(idField)) {
             log.debug("Resource: {} does not have idField: {}", resource, idField);
             throw new IdentificatorFieldNotFound();
