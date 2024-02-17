@@ -1,7 +1,7 @@
 package no.fintlabs.controller.aspect;
 
 import lombok.extern.slf4j.Slf4j;
-import no.fintlabs.exception.exceptions.ResourceNotFoundException;
+import no.fintlabs.controller.exception.exceptions.ResourceNotFoundException;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.core.annotation.Order;

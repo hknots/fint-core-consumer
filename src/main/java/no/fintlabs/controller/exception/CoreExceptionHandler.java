@@ -1,8 +1,8 @@
-package no.fintlabs.exception;
+package no.fintlabs.controller.exception;
 
-import no.fintlabs.exception.exceptions.EntityNotFoundException;
-import no.fintlabs.exception.exceptions.IdentificatorFieldNotFound;
-import no.fintlabs.exception.exceptions.ResourceNotFoundException;
+import no.fintlabs.controller.exception.exceptions.IdentificatorFieldNotFound;
+import no.fintlabs.controller.exception.exceptions.EntityNotFoundException;
+import no.fintlabs.controller.exception.exceptions.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

@@ -1,7 +1,7 @@
 package no.fintlabs.controller.aspect;
 
 import lombok.extern.slf4j.Slf4j;
-import no.fintlabs.exception.exceptions.IdentificatorFieldNotFound;
+import no.fintlabs.controller.exception.exceptions.IdentificatorFieldNotFound;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Qualifier;
