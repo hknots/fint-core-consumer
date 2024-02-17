@@ -11,14 +11,14 @@ import java.util.concurrent.ConcurrentHashMap;
 @Getter
 public class CoreCache {
 
-    private ConcurrentHashMap<String, String> idCache = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, String> idMapper = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String, FintMainObject> objectCache = new ConcurrentHashMap<>();
 
-    public void put(FintMainObject fintResource) {
+    public void put(FintMainObject fintObject) {
         String id = UUID.randomUUID().toString();
-        fintResource.getIdentifikators().values()
-                .forEach(identifikator -> idCache.put(identifikator.getIdentifikatorverdi(), id));
-        objectCache.put(id, fintResource);
+        fintObject.getIdentifikators().values()
+                .forEach(identifikator -> idMapper.put(identifikator.getIdentifikatorverdi(), id));
+        objectCache.put(id, fintObject);
     }
 
     public Collection<FintMainObject> findAll() {
@@ -27,8 +27,8 @@ public class CoreCache {
 
     @Nullable
     public FintMainObject findById(String id) {
-        if (idCache.contains(id)) {
-            return objectCache.get(idCache.get(id));
+        if (idMapper.contains(id)) {
+            return objectCache.get(idMapper.get(id));
         }
         return null;
     }
