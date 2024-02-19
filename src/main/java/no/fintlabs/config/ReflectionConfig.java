@@ -30,28 +30,21 @@ public class ReflectionConfig {
         return new Reflections("no.fint.model.felles").getSubTypesOf(FintMainObject.class);
     }
 
-    @Bean("resources")
-    public Set<Class<? extends FintMainObject>> resources() {
+    @Bean("mainResources")
+    public Set<Class<? extends FintMainObject>> mainResources() {
         return new Reflections(getFullPackageName()).getSubTypesOf(FintMainObject.class);
     }
 
-    @Bean("resourceNames")
-    public Set<String> resourceNames(Set<Class<? extends FintMainObject>> resources,
-                                     Set<Class<? extends FintMainObject>> commonResources) {
-        Set<String> relationFullClassNames = new HashSet<>(getRelationPackageNames(resources));
-
-        return Stream.concat(resources.stream(), commonResources.stream())
-                .filter(clazz -> resources.contains(clazz) || relationFullClassNames.contains(clazz.getName()))
-                .map(clazz -> clazz.getSimpleName().toLowerCase())
+    @Bean("resources")
+    public Set<Class<? extends FintMainObject>> resources(Set<Class<? extends FintMainObject>> mainResources, Set<Class<? extends FintMainObject>> commonResources) {
+        return Stream.concat(mainResources.stream(), commonResources.stream())
+                .filter(clazz -> mainResources.contains(clazz) || getRelationPackageNames(mainResources).contains(clazz.getName()))
                 .collect(Collectors.toSet());
     }
 
-    private List<String> getRelationPackageNames(Set<Class<? extends FintMainObject>> resources) {
-        return resources.stream()
-                .flatMap(clazz -> processFintMainObject(clazz, fintMainObject ->
-                        fintMainObject.getRelations().stream().map(FintRelation::getPackageName)))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+    @Bean("resourceNames")
+    public Set<String> resourceNames(Set<Class<? extends FintMainObject>> resources) {
+        return resources.stream().map(clazz -> clazz.getSimpleName().toLowerCase()).collect(Collectors.toSet());
     }
 
     @Bean("identificatorNames")
@@ -66,13 +59,15 @@ public class ReflectionConfig {
     }
 
     private Set<String> getIdentifikatorNames(Class<? extends FintMainObject> clazz) {
-        try {
-            FintMainObject instance = clazz.getDeclaredConstructor().newInstance();
-            return instance.getIdentifikators().keySet();
-        } catch (InstantiationException | IllegalAccessException
-                 | NoSuchMethodException | InvocationTargetException e) {
-            return Collections.emptySet();
-        }
+        return processFintMainObject(clazz, instance -> instance.getIdentifikators().keySet());
+    }
+
+    private List<String> getRelationPackageNames(Set<Class<? extends FintMainObject>> resources) {
+        return resources.stream()
+                .flatMap(clazz -> processFintMainObject(clazz, fintMainObject ->
+                        fintMainObject.getRelations().stream().map(FintRelation::getPackageName)))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     public static <R> R processFintMainObject(Class<? extends FintMainObject> clazz, Function<FintMainObject, R> processor) {
