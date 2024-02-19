@@ -4,8 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.fint.event.model.EventResponse;
 import no.fint.model.FintMainObject;
-import no.fint.model.felles.kompleksedatatyper.Identifikator;
-import no.fint.model.utdanning.elev.Elev;
 import no.fintlabs.controller.cache.CacheObject;
 import no.fintlabs.controller.cache.ResourceCache;
 import org.springframework.http.ResponseEntity;
@@ -26,11 +24,6 @@ public class CoreController {
 
     @GetMapping(RESOURCE)
     public ResponseEntity<AbstractCollection<FintMainObject>> allResources(@PathVariable String resource) {
-        Elev elev = new Elev();
-        Identifikator identifikator = new Identifikator();
-        identifikator.setIdentifikatorverdi("123");
-        elev.setBrukernavn(identifikator);
-        resourceCache.getContainer(resource).put(elev);
         return null;
     }
 
