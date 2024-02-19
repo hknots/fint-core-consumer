@@ -28,7 +28,6 @@ public class CacheConfig {
                     );
 
                     resourceCache.put(clazz.getSimpleName().toLowerCase(), new CoreCache(idMapper));
-                    log.info("ok for {}", clazz.getSimpleName());
                     return null;
                 })
         );
