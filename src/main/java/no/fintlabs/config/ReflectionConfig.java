@@ -1,19 +1,20 @@
 package no.fintlabs.config;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import no.fint.model.FintMainObject;
+import no.fint.model.FintRelation;
 import org.reflections.Reflections;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-
+@Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class ReflectionConfig {
@@ -24,17 +25,33 @@ public class ReflectionConfig {
         return String.format("no.fint.model.%s.%s", props.getDomainName(), props.getPackageName());
     }
 
-    @Bean
+    @Bean("commonResources")
+    public Set<Class<? extends FintMainObject>> commonResources() {
+        return new Reflections("no.fint.model.felles").getSubTypesOf(FintMainObject.class);
+    }
+
+    @Bean("resources")
     public Set<Class<? extends FintMainObject>> resources() {
         return new Reflections(getFullPackageName()).getSubTypesOf(FintMainObject.class);
     }
 
-    // TODO: Add common entities as well
     @Bean("resourceNames")
-    public Set<String> resourceNames(Set<Class<? extends FintMainObject>> resources) {
-        return resources.stream()
+    public Set<String> resourceNames(Set<Class<? extends FintMainObject>> resources,
+                                     Set<Class<? extends FintMainObject>> commonResources) {
+        Set<String> relationFullClassNames = new HashSet<>(getRelationPackageNames(resources));
+
+        return Stream.concat(resources.stream(), commonResources.stream())
+                .filter(clazz -> resources.contains(clazz) || relationFullClassNames.contains(clazz.getName()))
                 .map(clazz -> clazz.getSimpleName().toLowerCase())
-                .collect(Collectors.toUnmodifiableSet());
+                .collect(Collectors.toSet());
+    }
+
+    private List<String> getRelationPackageNames(Set<Class<? extends FintMainObject>> resources) {
+        return resources.stream()
+                .flatMap(clazz -> processFintMainObject(clazz, fintMainObject ->
+                        fintMainObject.getRelations().stream().map(FintRelation::getPackageName)))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     @Bean("identificatorNames")
@@ -55,6 +72,17 @@ public class ReflectionConfig {
         } catch (InstantiationException | IllegalAccessException
                  | NoSuchMethodException | InvocationTargetException e) {
             return Collections.emptySet();
+        }
+    }
+
+    public static <R> R processFintMainObject(Class<? extends FintMainObject> clazz, Function<FintMainObject, R> processor) {
+        try {
+            FintMainObject fintMainObject = clazz.getDeclaredConstructor().newInstance();
+            return processor.apply(fintMainObject);
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
+                 InvocationTargetException e) {
+            log.error("Error processing FintMainObject: {} - {}", e.getMessage(), clazz.getSimpleName());
+            return null;
         }
     }
 
