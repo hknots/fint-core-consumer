@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import no.fint.model.FintMainObject;
 
 import javax.annotation.Nullable;
+import java.util.LinkedHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -13,7 +14,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Slf4j
 public class CoreCache {
 
-    private final ConcurrentHashMap<String, ConcurrentHashMap<String, CacheObject>> objectMapper;
+    private final ConcurrentHashMap<String, LinkedHashMap<String, CacheObject>> objectMapper;
 
     @Getter
     private final AtomicLong cacheSize = new AtomicLong(0);
@@ -21,7 +22,7 @@ public class CoreCache {
     @Getter
     private volatile long lastUpdated;
 
-    public CoreCache(ConcurrentHashMap<String, ConcurrentHashMap<String, CacheObject>> objectMapper) {
+    public CoreCache(ConcurrentHashMap<String, LinkedHashMap<String, CacheObject>> objectMapper) {
         this.objectMapper = objectMapper;
         lastUpdated = System.currentTimeMillis();
     }
