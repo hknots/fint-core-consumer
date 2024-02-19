@@ -7,17 +7,25 @@ import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Getter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import no.fint.model.FintMultiplicity;
 import no.fint.model.felles.kompleksedatatyper.Identifikator;
 import no.fint.model.FintMainObject;
 import no.fint.model.FintIdentifikator;
+import no.fint.model.FintRelation;
 import java.util.Date;
 import no.fint.model.felles.kompleksedatatyper.Identifikator;
 import no.fint.model.felles.kompleksedatatyper.Periode;
+
+import static no.fint.model.FintMultiplicity.ONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.ONE_TO_MANY;
+import static no.fint.model.FintMultiplicity.NONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.NONE_TO_MANY;
 
 @Data
 @NoArgsConstructor
@@ -25,25 +33,25 @@ import no.fint.model.felles.kompleksedatatyper.Periode;
 @ToString
 public class Fravar  implements FintMainObject {
     @Getter
-    public enum Relasjonsnavn {
-            FRAVARSGRUNN("no.fint.model.administrasjon.kodeverk.Fravarsgrunn", "0..1"),
-            FRAVARSTYPE("no.fint.model.administrasjon.kodeverk.Fravarstype", "1"),
-            ARBEIDSFORHOLD("no.fint.model.administrasjon.personal.Arbeidsforhold", "1..*"),
-            FORTSETTELSE("no.fint.model.administrasjon.personal.Fravar", "0..1"),
-            GODKJENNER("no.fint.model.administrasjon.personal.Personalressurs", "0..1"),
-            FORTSETTER("no.fint.model.administrasjon.personal.Fravar", "0..1");
+    public enum Relasjonsnavn implements FintRelation {
+            FRAVARSGRUNN("fravarsgrunn", "no.fint.model.administrasjon.kodeverk.Fravarsgrunn", NONE_TO_ONE),
+            FRAVARSTYPE("fravarstype", "no.fint.model.administrasjon.kodeverk.Fravarstype", ONE_TO_ONE),
+            ARBEIDSFORHOLD("arbeidsforhold", "no.fint.model.administrasjon.personal.Arbeidsforhold", ONE_TO_MANY),
+            FORTSETTELSE("fortsettelse", "no.fint.model.administrasjon.personal.Fravar", NONE_TO_ONE),
+            GODKJENNER("godkjenner", "no.fint.model.administrasjon.personal.Personalressurs", NONE_TO_ONE),
+            FORTSETTER("fortsetter", "no.fint.model.administrasjon.personal.Fravar", NONE_TO_ONE);
 	
-        private final String typeName;
-        private final String multiplicity;
+		private final String name;
+        private final String packageName;
+        private final FintMultiplicity multiplicity;
 
-        private Relasjonsnavn(String typeName, String multiplicity) {
-            this.typeName = typeName;
+        private Relasjonsnavn(String name, String packageName, FintMultiplicity multiplicity) {
+			this.name = name;
+            this.packageName = packageName;
             this.multiplicity = multiplicity;
         }
     }
 
-	
-	@JsonIgnore
 	public Map<String, FintIdentifikator> getIdentifikators() {
     	Map<String, FintIdentifikator> identifikators = new HashMap<>();
 		identifikators.put("kildesystemId", this.kildesystemId);
@@ -51,8 +59,8 @@ public class Fravar  implements FintMainObject {
     
     	return identifikators;
 	}
-
-
+	@JsonIgnore
+	private final List<FintRelation> relations = new ArrayList<>(List.of(Relasjonsnavn.values()));
     private @Valid Date godkjent;
     private @Valid Identifikator kildesystemId;
     @NotNull

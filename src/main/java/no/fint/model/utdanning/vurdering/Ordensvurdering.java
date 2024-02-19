@@ -7,16 +7,24 @@ import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Getter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import no.fint.model.FintMultiplicity;
 import no.fint.model.felles.kompleksedatatyper.Identifikator;
 import no.fint.model.FintAbstractObject;
 import no.fint.model.FintIdentifikator;
+import no.fint.model.FintRelation;
 import no.fint.model.felles.kompleksedatatyper.Identifikator;
 import java.util.Date;
+
+import static no.fint.model.FintMultiplicity.ONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.ONE_TO_MANY;
+import static no.fint.model.FintMultiplicity.NONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.NONE_TO_MANY;
 
 @Data
 @NoArgsConstructor
@@ -24,30 +32,30 @@ import java.util.Date;
 @ToString
 public abstract class Ordensvurdering  implements FintAbstractObject {
     @Getter
-    public enum Relasjonsnavn {
-            ATFERD("no.fint.model.utdanning.vurdering.Karakterverdi", "1"),
-            ORDEN("no.fint.model.utdanning.vurdering.Karakterverdi", "1"),
-            SKOLEAR("no.fint.model.utdanning.kodeverk.Skolear", "0..1");
+    public enum Relasjonsnavn implements FintRelation {
+            ATFERD("atferd", "no.fint.model.utdanning.vurdering.Karakterverdi", ONE_TO_ONE),
+            ORDEN("orden", "no.fint.model.utdanning.vurdering.Karakterverdi", ONE_TO_ONE),
+            SKOLEAR("skolear", "no.fint.model.utdanning.kodeverk.Skolear", NONE_TO_ONE);
 	
-        private final String typeName;
-        private final String multiplicity;
+		private final String name;
+        private final String packageName;
+        private final FintMultiplicity multiplicity;
 
-        private Relasjonsnavn(String typeName, String multiplicity) {
-            this.typeName = typeName;
+        private Relasjonsnavn(String name, String packageName, FintMultiplicity multiplicity) {
+			this.name = name;
+            this.packageName = packageName;
             this.multiplicity = multiplicity;
         }
     }
 
-	
-	@JsonIgnore
 	public Map<String, FintIdentifikator> getIdentifikators() {
     	Map<String, FintIdentifikator> identifikators = new HashMap<>();
 		identifikators.put("systemId", this.systemId);
     
     	return identifikators;
 	}
-
-
+	@JsonIgnore
+	private final List<FintRelation> relations = new ArrayList<>(List.of(Relasjonsnavn.values()));
     @NotBlank
     private String kommentar;
     @NotNull

@@ -7,18 +7,26 @@ import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Getter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import no.fint.model.FintMultiplicity;
 import no.fint.model.felles.kompleksedatatyper.Identifikator;
 import no.fint.model.FintMainObject;
 import no.fint.model.FintIdentifikator;
+import no.fint.model.FintRelation;
 import no.fint.model.okonomi.faktura.Fakturalinje;
 import java.util.Date;
 import no.fint.model.okonomi.faktura.Fakturamottaker;
 import no.fint.model.felles.kompleksedatatyper.Identifikator;
+
+import static no.fint.model.FintMultiplicity.ONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.ONE_TO_MANY;
+import static no.fint.model.FintMultiplicity.NONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.NONE_TO_MANY;
 
 @Data
 @NoArgsConstructor
@@ -26,29 +34,29 @@ import no.fint.model.felles.kompleksedatatyper.Identifikator;
 @ToString
 public class Fakturagrunnlag  implements FintMainObject {
     @Getter
-    public enum Relasjonsnavn {
-            FAKTURA("no.fint.model.okonomi.faktura.Faktura", "0..*"),
-            FAKTURAUTSTEDER("no.fint.model.okonomi.faktura.Fakturautsteder", "1");
+    public enum Relasjonsnavn implements FintRelation {
+            FAKTURA("faktura", "no.fint.model.okonomi.faktura.Faktura", NONE_TO_MANY),
+            FAKTURAUTSTEDER("fakturautsteder", "no.fint.model.okonomi.faktura.Fakturautsteder", ONE_TO_ONE);
 	
-        private final String typeName;
-        private final String multiplicity;
+		private final String name;
+        private final String packageName;
+        private final FintMultiplicity multiplicity;
 
-        private Relasjonsnavn(String typeName, String multiplicity) {
-            this.typeName = typeName;
+        private Relasjonsnavn(String name, String packageName, FintMultiplicity multiplicity) {
+			this.name = name;
+            this.packageName = packageName;
             this.multiplicity = multiplicity;
         }
     }
 
-	
-	@JsonIgnore
 	public Map<String, FintIdentifikator> getIdentifikators() {
     	Map<String, FintIdentifikator> identifikators = new HashMap<>();
 		identifikators.put("ordrenummer", this.ordrenummer);
     
     	return identifikators;
 	}
-
-
+	@JsonIgnore
+	private final List<FintRelation> relations = new ArrayList<>(List.of(Relasjonsnavn.values()));
     private Long avgiftsbelop;
     @NotEmpty
     private List<@Valid Fakturalinje> fakturalinjer;

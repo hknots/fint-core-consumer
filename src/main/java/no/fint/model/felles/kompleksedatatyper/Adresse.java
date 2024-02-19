@@ -7,14 +7,22 @@ import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Getter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import no.fint.model.FintMultiplicity;
 import no.fint.model.felles.kompleksedatatyper.Identifikator;
 import no.fint.model.FintComplexDatatypeObject;
 import no.fint.model.FintIdentifikator;
+import no.fint.model.FintRelation;
+
+import static no.fint.model.FintMultiplicity.ONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.ONE_TO_MANY;
+import static no.fint.model.FintMultiplicity.NONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.NONE_TO_MANY;
 
 @Data
 @NoArgsConstructor
@@ -22,27 +30,22 @@ import no.fint.model.FintIdentifikator;
 @ToString
 public class Adresse  implements FintComplexDatatypeObject {
     @Getter
-    public enum Relasjonsnavn {
-            LAND("no.fint.model.felles.kodeverk.iso.Landkode", "0..1");
+    public enum Relasjonsnavn implements FintRelation {
+            LAND("land", "no.fint.model.felles.kodeverk.iso.Landkode", NONE_TO_ONE);
 	
-        private final String typeName;
-        private final String multiplicity;
+		private final String name;
+        private final String packageName;
+        private final FintMultiplicity multiplicity;
 
-        private Relasjonsnavn(String typeName, String multiplicity) {
-            this.typeName = typeName;
+        private Relasjonsnavn(String name, String packageName, FintMultiplicity multiplicity) {
+			this.name = name;
+            this.packageName = packageName;
             this.multiplicity = multiplicity;
         }
     }
 
-	
 	@JsonIgnore
-	public Map<String, FintIdentifikator> getIdentifikators() {
-    	Map<String, FintIdentifikator> identifikators = new HashMap<>();
-    
-    	return identifikators;
-	}
-
-
+	private final List<FintRelation> relations = new ArrayList<>(List.of(Relasjonsnavn.values()));
     private List<String> adresselinje;
     private String postnummer;
     private String poststed;

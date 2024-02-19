@@ -7,15 +7,23 @@ import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Getter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import no.fint.model.FintMultiplicity;
 import no.fint.model.felles.kompleksedatatyper.Identifikator;
 import no.fint.model.FintMainObject;
 import no.fint.model.FintIdentifikator;
+import no.fint.model.FintRelation;
 import no.fint.model.utdanning.basisklasser.Gruppemedlemskap;
+
+import static no.fint.model.FintMultiplicity.ONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.ONE_TO_MANY;
+import static no.fint.model.FintMultiplicity.NONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.NONE_TO_MANY;
 
 @Data
 @NoArgsConstructor
@@ -23,29 +31,29 @@ import no.fint.model.utdanning.basisklasser.Gruppemedlemskap;
 @ToString(callSuper=true)
 public class Faggruppemedlemskap extends Gruppemedlemskap  implements FintMainObject {
     @Getter
-    public enum Relasjonsnavn {
-            FAGMERKNAD("no.fint.model.utdanning.kodeverk.Fagmerknad", "0..1"),
-            FAGSTATUS("no.fint.model.utdanning.kodeverk.Fagstatus", "0..1"),
-            ELEVFORHOLD("no.fint.model.utdanning.elev.Elevforhold", "1"),
-            FAGGRUPPE("no.fint.model.utdanning.timeplan.Faggruppe", "1");
+    public enum Relasjonsnavn implements FintRelation {
+            FAGMERKNAD("fagmerknad", "no.fint.model.utdanning.kodeverk.Fagmerknad", NONE_TO_ONE),
+            FAGSTATUS("fagstatus", "no.fint.model.utdanning.kodeverk.Fagstatus", NONE_TO_ONE),
+            ELEVFORHOLD("elevforhold", "no.fint.model.utdanning.elev.Elevforhold", ONE_TO_ONE),
+            FAGGRUPPE("faggruppe", "no.fint.model.utdanning.timeplan.Faggruppe", ONE_TO_ONE);
 	
-        private final String typeName;
-        private final String multiplicity;
+		private final String name;
+        private final String packageName;
+        private final FintMultiplicity multiplicity;
 
-        private Relasjonsnavn(String typeName, String multiplicity) {
-            this.typeName = typeName;
+        private Relasjonsnavn(String name, String packageName, FintMultiplicity multiplicity) {
+			this.name = name;
+            this.packageName = packageName;
             this.multiplicity = multiplicity;
         }
     }
 
-	
-	@JsonIgnore
 	public Map<String, FintIdentifikator> getIdentifikators() {
     	Map<String, FintIdentifikator> identifikators = new HashMap<>();
 		identifikators.putAll(super.getIdentifikators());
     
     	return identifikators;
 	}
-
-
+	@JsonIgnore
+	private final List<FintRelation> relations = new ArrayList<>(List.of(Relasjonsnavn.values()));
 }

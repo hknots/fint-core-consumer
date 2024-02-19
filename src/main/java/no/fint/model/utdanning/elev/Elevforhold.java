@@ -7,18 +7,26 @@ import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Getter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import no.fint.model.FintMultiplicity;
 import no.fint.model.felles.kompleksedatatyper.Identifikator;
 import no.fint.model.FintMainObject;
 import no.fint.model.FintIdentifikator;
+import no.fint.model.FintRelation;
 import no.fint.model.utdanning.vurdering.Anmerkninger;
 import java.util.Date;
 import no.fint.model.felles.kompleksedatatyper.Periode;
 import no.fint.model.utdanning.basisklasser.Utdanningsforhold;
+
+import static no.fint.model.FintMultiplicity.ONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.ONE_TO_MANY;
+import static no.fint.model.FintMultiplicity.NONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.NONE_TO_MANY;
 
 @Data
 @NoArgsConstructor
@@ -26,57 +34,57 @@ import no.fint.model.utdanning.basisklasser.Utdanningsforhold;
 @ToString(callSuper=true)
 public class Elevforhold extends Utdanningsforhold  implements FintMainObject {
     @Getter
-    public enum Relasjonsnavn {
-            ELEV("no.fint.model.utdanning.elev.Elev", "1"),
-            SIDEMAL("no.fint.model.utdanning.kodeverk.Fagmerknad", "0..*"),
-            KATEGORI("no.fint.model.utdanning.kodeverk.Elevkategori", "0..1"),
-            KROPPSOVING("no.fint.model.utdanning.kodeverk.Fagmerknad", "0..1"),
-            SKOLE("no.fint.model.utdanning.utdanningsprogram.Skole", "1"),
-            AVBRUDDSARSAK("no.fint.model.utdanning.kodeverk.Avbruddsarsak", "0..*"),
-            FRAVARSREGISTRERINGER("no.fint.model.utdanning.vurdering.Elevfravar", "0..1"),
-            FAGGRUPPEMEDLEMSKAP("no.fint.model.utdanning.timeplan.Faggruppemedlemskap", "0..*"),
-            SKOLEAR("no.fint.model.utdanning.kodeverk.Skolear", "0..1"),
-            BASISGRUPPE("no.fint.model.utdanning.elev.Basisgruppe", "0..*"),
-            BASISGRUPPEMEDLEMSKAP("no.fint.model.utdanning.elev.Basisgruppemedlemskap", "0..*"),
-            UNDERVISNINGSGRUPPEMEDLEMSKAP("no.fint.model.utdanning.timeplan.Undervisningsgruppemedlemskap", "0..*"),
-            VURDERING("no.fint.model.utdanning.vurdering.Vurdering", "0..*"),
-            SLUTTORDENSVURDERING("no.fint.model.utdanning.vurdering.Sluttordensvurdering", "0..*"),
-            KONTAKTLARERGRUPPE("no.fint.model.utdanning.elev.Kontaktlarergruppe", "0..*"),
-            UNDERVEISFAGVURDERING("no.fint.model.utdanning.vurdering.Underveisfagvurdering", "0..*"),
-            HALVARSFAGVURDERING("no.fint.model.utdanning.vurdering.Halvarsfagvurdering", "0..*"),
-            SLUTTFAGVURDERING("no.fint.model.utdanning.vurdering.Sluttfagvurdering", "0..*"),
-            PERSONGRUPPEMEDLEMSKAP("no.fint.model.utdanning.elev.Persongruppemedlemskap", "0..*"),
-            EKSAMENSGRUPPEMEDLEMSKAP("no.fint.model.utdanning.vurdering.Eksamensgruppemedlemskap", "0..*"),
-            KONTAKTLARERGRUPPEMEDLEMSKAP("no.fint.model.utdanning.elev.Kontaktlarergruppemedlemskap", "0..*"),
-            ELEVFRAVAR("no.fint.model.utdanning.vurdering.Fravarsoversikt", "0..*"),
-            TILRETTELEGGING("no.fint.model.utdanning.elev.Elevtilrettelegging", "0..*"),
-            HALVARSORDENSVURDERING("no.fint.model.utdanning.vurdering.Halvarsordensvurdering", "0..*"),
-            PROGRAMOMRADE("no.fint.model.utdanning.utdanningsprogram.Programomrade", "0..1"),
-            FRAVAR("no.fint.model.utdanning.vurdering.Fravar", "0..*"),
-            PROGRAMOMRADEMEDLEMSKAP("no.fint.model.utdanning.utdanningsprogram.Programomrademedlemskap", "0..*"),
-            UNDERVEISORDENSVURDERING("no.fint.model.utdanning.vurdering.Underveisordensvurdering", "0..*"),
-            EKSAMENSGRUPPE("no.fint.model.utdanning.vurdering.Eksamensgruppe", "0..*"),
-            UNDERVISNINGSGRUPPE("no.fint.model.utdanning.timeplan.Undervisningsgruppe", "0..*");
+    public enum Relasjonsnavn implements FintRelation {
+            ELEV("elev", "no.fint.model.utdanning.elev.Elev", ONE_TO_ONE),
+            SIDEMAL("sidemal", "no.fint.model.utdanning.kodeverk.Fagmerknad", NONE_TO_MANY),
+            KATEGORI("kategori", "no.fint.model.utdanning.kodeverk.Elevkategori", NONE_TO_ONE),
+            KROPPSOVING("kroppsoving", "no.fint.model.utdanning.kodeverk.Fagmerknad", NONE_TO_ONE),
+            SKOLE("skole", "no.fint.model.utdanning.utdanningsprogram.Skole", ONE_TO_ONE),
+            AVBRUDDSARSAK("avbruddsarsak", "no.fint.model.utdanning.kodeverk.Avbruddsarsak", NONE_TO_MANY),
+            FRAVARSREGISTRERINGER("fravarsregistreringer", "no.fint.model.utdanning.vurdering.Elevfravar", NONE_TO_ONE),
+            FAGGRUPPEMEDLEMSKAP("faggruppemedlemskap", "no.fint.model.utdanning.timeplan.Faggruppemedlemskap", NONE_TO_MANY),
+            SKOLEAR("skolear", "no.fint.model.utdanning.kodeverk.Skolear", NONE_TO_ONE),
+            BASISGRUPPE("basisgruppe", "no.fint.model.utdanning.elev.Basisgruppe", NONE_TO_MANY),
+            BASISGRUPPEMEDLEMSKAP("basisgruppemedlemskap", "no.fint.model.utdanning.elev.Basisgruppemedlemskap", NONE_TO_MANY),
+            UNDERVISNINGSGRUPPEMEDLEMSKAP("undervisningsgruppemedlemskap", "no.fint.model.utdanning.timeplan.Undervisningsgruppemedlemskap", NONE_TO_MANY),
+            VURDERING("vurdering", "no.fint.model.utdanning.vurdering.Vurdering", NONE_TO_MANY),
+            SLUTTORDENSVURDERING("sluttordensvurdering", "no.fint.model.utdanning.vurdering.Sluttordensvurdering", NONE_TO_MANY),
+            KONTAKTLARERGRUPPE("kontaktlarergruppe", "no.fint.model.utdanning.elev.Kontaktlarergruppe", NONE_TO_MANY),
+            UNDERVEISFAGVURDERING("underveisfagvurdering", "no.fint.model.utdanning.vurdering.Underveisfagvurdering", NONE_TO_MANY),
+            HALVARSFAGVURDERING("halvarsfagvurdering", "no.fint.model.utdanning.vurdering.Halvarsfagvurdering", NONE_TO_MANY),
+            SLUTTFAGVURDERING("sluttfagvurdering", "no.fint.model.utdanning.vurdering.Sluttfagvurdering", NONE_TO_MANY),
+            PERSONGRUPPEMEDLEMSKAP("persongruppemedlemskap", "no.fint.model.utdanning.elev.Persongruppemedlemskap", NONE_TO_MANY),
+            EKSAMENSGRUPPEMEDLEMSKAP("eksamensgruppemedlemskap", "no.fint.model.utdanning.vurdering.Eksamensgruppemedlemskap", NONE_TO_MANY),
+            KONTAKTLARERGRUPPEMEDLEMSKAP("kontaktlarergruppemedlemskap", "no.fint.model.utdanning.elev.Kontaktlarergruppemedlemskap", NONE_TO_MANY),
+            ELEVFRAVAR("elevfravar", "no.fint.model.utdanning.vurdering.Fravarsoversikt", NONE_TO_MANY),
+            TILRETTELEGGING("tilrettelegging", "no.fint.model.utdanning.elev.Elevtilrettelegging", NONE_TO_MANY),
+            HALVARSORDENSVURDERING("halvarsordensvurdering", "no.fint.model.utdanning.vurdering.Halvarsordensvurdering", NONE_TO_MANY),
+            PROGRAMOMRADE("programomrade", "no.fint.model.utdanning.utdanningsprogram.Programomrade", NONE_TO_ONE),
+            FRAVAR("fravar", "no.fint.model.utdanning.vurdering.Fravar", NONE_TO_MANY),
+            PROGRAMOMRADEMEDLEMSKAP("programomrademedlemskap", "no.fint.model.utdanning.utdanningsprogram.Programomrademedlemskap", NONE_TO_MANY),
+            UNDERVEISORDENSVURDERING("underveisordensvurdering", "no.fint.model.utdanning.vurdering.Underveisordensvurdering", NONE_TO_MANY),
+            EKSAMENSGRUPPE("eksamensgruppe", "no.fint.model.utdanning.vurdering.Eksamensgruppe", NONE_TO_MANY),
+            UNDERVISNINGSGRUPPE("undervisningsgruppe", "no.fint.model.utdanning.timeplan.Undervisningsgruppe", NONE_TO_MANY);
 	
-        private final String typeName;
-        private final String multiplicity;
+		private final String name;
+        private final String packageName;
+        private final FintMultiplicity multiplicity;
 
-        private Relasjonsnavn(String typeName, String multiplicity) {
-            this.typeName = typeName;
+        private Relasjonsnavn(String name, String packageName, FintMultiplicity multiplicity) {
+			this.name = name;
+            this.packageName = packageName;
             this.multiplicity = multiplicity;
         }
     }
 
-	
-	@JsonIgnore
 	public Map<String, FintIdentifikator> getIdentifikators() {
     	Map<String, FintIdentifikator> identifikators = new HashMap<>();
 		identifikators.putAll(super.getIdentifikators());
     
     	return identifikators;
 	}
-
-
+	@JsonIgnore
+	private final List<FintRelation> relations = new ArrayList<>(List.of(Relasjonsnavn.values()));
     private List<@Valid Anmerkninger> anmerkninger;
     private Date avbruddsdato;
     private @Valid Periode gyldighetsperiode;

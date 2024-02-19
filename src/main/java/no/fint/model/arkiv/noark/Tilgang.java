@@ -7,15 +7,23 @@ import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Getter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import no.fint.model.FintMultiplicity;
 import no.fint.model.felles.kompleksedatatyper.Identifikator;
 import no.fint.model.FintMainObject;
 import no.fint.model.FintIdentifikator;
+import no.fint.model.FintRelation;
 import no.fint.model.felles.kompleksedatatyper.Identifikator;
+
+import static no.fint.model.FintMultiplicity.ONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.ONE_TO_MANY;
+import static no.fint.model.FintMultiplicity.NONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.NONE_TO_MANY;
 
 @Data
 @NoArgsConstructor
@@ -23,31 +31,31 @@ import no.fint.model.felles.kompleksedatatyper.Identifikator;
 @ToString
 public class Tilgang  implements FintMainObject {
     @Getter
-    public enum Relasjonsnavn {
-            ROLLE("no.fint.model.arkiv.kodeverk.Rolle", "1"),
-            ADMINISTRATIVENHET("no.fint.model.arkiv.noark.AdministrativEnhet", "0..1"),
-            ARKIVDEL("no.fint.model.arkiv.noark.Arkivdel", "0..1"),
-            ARKIVRESSURS("no.fint.model.arkiv.noark.Arkivressurs", "0..*");
+    public enum Relasjonsnavn implements FintRelation {
+            ROLLE("rolle", "no.fint.model.arkiv.kodeverk.Rolle", ONE_TO_ONE),
+            ADMINISTRATIVENHET("administrativEnhet", "no.fint.model.arkiv.noark.AdministrativEnhet", NONE_TO_ONE),
+            ARKIVDEL("arkivdel", "no.fint.model.arkiv.noark.Arkivdel", NONE_TO_ONE),
+            ARKIVRESSURS("arkivressurs", "no.fint.model.arkiv.noark.Arkivressurs", NONE_TO_MANY);
 	
-        private final String typeName;
-        private final String multiplicity;
+		private final String name;
+        private final String packageName;
+        private final FintMultiplicity multiplicity;
 
-        private Relasjonsnavn(String typeName, String multiplicity) {
-            this.typeName = typeName;
+        private Relasjonsnavn(String name, String packageName, FintMultiplicity multiplicity) {
+			this.name = name;
+            this.packageName = packageName;
             this.multiplicity = multiplicity;
         }
     }
 
-	
-	@JsonIgnore
 	public Map<String, FintIdentifikator> getIdentifikators() {
     	Map<String, FintIdentifikator> identifikators = new HashMap<>();
 		identifikators.put("systemId", this.systemId);
     
     	return identifikators;
 	}
-
-
+	@JsonIgnore
+	private final List<FintRelation> relations = new ArrayList<>(List.of(Relasjonsnavn.values()));
     @NotNull
     private @Valid Identifikator systemId;
     @NotBlank

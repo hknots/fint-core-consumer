@@ -7,18 +7,26 @@ import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Getter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import no.fint.model.FintMultiplicity;
 import no.fint.model.felles.kompleksedatatyper.Identifikator;
 import no.fint.model.FintMainObject;
 import no.fint.model.FintIdentifikator;
+import no.fint.model.FintRelation;
 import no.fint.model.felles.kompleksedatatyper.Identifikator;
 import no.fint.model.felles.kompleksedatatyper.Periode;
 import java.util.Date;
 import no.fint.model.felles.kompleksedatatyper.Kontaktinformasjon;
+
+import static no.fint.model.FintMultiplicity.ONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.ONE_TO_MANY;
+import static no.fint.model.FintMultiplicity.NONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.NONE_TO_MANY;
 
 @Data
 @NoArgsConstructor
@@ -26,27 +34,27 @@ import no.fint.model.felles.kompleksedatatyper.Kontaktinformasjon;
 @ToString
 public class Personalressurs  implements FintMainObject {
     @Getter
-    public enum Relasjonsnavn {
-            PERSONALRESSURSKATEGORI("no.fint.model.administrasjon.kodeverk.Personalressurskategori", "1"),
-            ARBEIDSFORHOLD("no.fint.model.administrasjon.personal.Arbeidsforhold", "0..*"),
-            PERSON("no.fint.model.felles.Person", "1"),
-            STEDFORTREDER("no.fint.model.administrasjon.fullmakt.Fullmakt", "0..*"),
-            FULLMAKT("no.fint.model.administrasjon.fullmakt.Fullmakt", "0..*"),
-            LEDER("no.fint.model.administrasjon.organisasjon.Organisasjonselement", "0..*"),
-            PERSONALANSVAR("no.fint.model.administrasjon.personal.Arbeidsforhold", "0..*"),
-            SKOLERESSURS("no.fint.model.utdanning.elev.Skoleressurs", "0..1");
+    public enum Relasjonsnavn implements FintRelation {
+            PERSONALRESSURSKATEGORI("personalressurskategori", "no.fint.model.administrasjon.kodeverk.Personalressurskategori", ONE_TO_ONE),
+            ARBEIDSFORHOLD("arbeidsforhold", "no.fint.model.administrasjon.personal.Arbeidsforhold", NONE_TO_MANY),
+            PERSON("person", "no.fint.model.felles.Person", ONE_TO_ONE),
+            STEDFORTREDER("stedfortreder", "no.fint.model.administrasjon.fullmakt.Fullmakt", NONE_TO_MANY),
+            FULLMAKT("fullmakt", "no.fint.model.administrasjon.fullmakt.Fullmakt", NONE_TO_MANY),
+            LEDER("leder", "no.fint.model.administrasjon.organisasjon.Organisasjonselement", NONE_TO_MANY),
+            PERSONALANSVAR("personalansvar", "no.fint.model.administrasjon.personal.Arbeidsforhold", NONE_TO_MANY),
+            SKOLERESSURS("skoleressurs", "no.fint.model.utdanning.elev.Skoleressurs", NONE_TO_ONE);
 	
-        private final String typeName;
-        private final String multiplicity;
+		private final String name;
+        private final String packageName;
+        private final FintMultiplicity multiplicity;
 
-        private Relasjonsnavn(String typeName, String multiplicity) {
-            this.typeName = typeName;
+        private Relasjonsnavn(String name, String packageName, FintMultiplicity multiplicity) {
+			this.name = name;
+            this.packageName = packageName;
             this.multiplicity = multiplicity;
         }
     }
 
-	
-	@JsonIgnore
 	public Map<String, FintIdentifikator> getIdentifikators() {
     	Map<String, FintIdentifikator> identifikators = new HashMap<>();
 		identifikators.put("ansattnummer", this.ansattnummer);
@@ -55,8 +63,8 @@ public class Personalressurs  implements FintMainObject {
     
     	return identifikators;
 	}
-
-
+	@JsonIgnore
+	private final List<FintRelation> relations = new ArrayList<>(List.of(Relasjonsnavn.values()));
     @NotNull
     private @Valid Identifikator ansattnummer;
     @NotNull

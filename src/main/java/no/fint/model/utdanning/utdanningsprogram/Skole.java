@@ -7,16 +7,24 @@ import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Getter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import no.fint.model.FintMultiplicity;
 import no.fint.model.felles.kompleksedatatyper.Identifikator;
 import no.fint.model.FintMainObject;
 import no.fint.model.FintIdentifikator;
+import no.fint.model.FintRelation;
 import no.fint.model.felles.kompleksedatatyper.Identifikator;
 import no.fint.model.felles.basisklasser.Enhet;
+
+import static no.fint.model.FintMultiplicity.ONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.ONE_TO_MANY;
+import static no.fint.model.FintMultiplicity.NONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.NONE_TO_MANY;
 
 @Data
 @NoArgsConstructor
@@ -24,32 +32,32 @@ import no.fint.model.felles.basisklasser.Enhet;
 @ToString(callSuper=true)
 public class Skole extends Enhet  implements FintMainObject {
     @Getter
-    public enum Relasjonsnavn {
-            ORGANISASJON("no.fint.model.administrasjon.organisasjon.Organisasjonselement", "0..1"),
-            FAG("no.fint.model.utdanning.timeplan.Fag", "0..*"),
-            SKOLEEIERTYPE("no.fint.model.utdanning.kodeverk.Skoleeiertype", "0..1"),
-            VIGOREFERANSE("no.fint.model.utdanning.kodeverk.Vigoreferanse", "0..1"),
-            BASISGRUPPE("no.fint.model.utdanning.elev.Basisgruppe", "0..*"),
-            ELEVFORHOLD("no.fint.model.utdanning.elev.Elevforhold", "0..*"),
-            KONTAKTLARERGRUPPE("no.fint.model.utdanning.elev.Kontaktlarergruppe", "0..*"),
-            SKOLERESSURS("no.fint.model.utdanning.elev.Skoleressurs", "0..*"),
-            UNDERVISNINGSFORHOLD("no.fint.model.utdanning.elev.Undervisningsforhold", "0..*"),
-            FAGGRUPPE("no.fint.model.utdanning.timeplan.Faggruppe", "0..*"),
-            UNDERVISNINGSGRUPPE("no.fint.model.utdanning.timeplan.Undervisningsgruppe", "0..*"),
-            EKSAMENSGRUPPE("no.fint.model.utdanning.vurdering.Eksamensgruppe", "0..*"),
-            UTDANNINGSPROGRAM("no.fint.model.utdanning.utdanningsprogram.Utdanningsprogram", "0..*");
+    public enum Relasjonsnavn implements FintRelation {
+            ORGANISASJON("organisasjon", "no.fint.model.administrasjon.organisasjon.Organisasjonselement", NONE_TO_ONE),
+            FAG("fag", "no.fint.model.utdanning.timeplan.Fag", NONE_TO_MANY),
+            SKOLEEIERTYPE("skoleeierType", "no.fint.model.utdanning.kodeverk.Skoleeiertype", NONE_TO_ONE),
+            VIGOREFERANSE("vigoreferanse", "no.fint.model.utdanning.kodeverk.Vigoreferanse", NONE_TO_ONE),
+            BASISGRUPPE("basisgruppe", "no.fint.model.utdanning.elev.Basisgruppe", NONE_TO_MANY),
+            ELEVFORHOLD("elevforhold", "no.fint.model.utdanning.elev.Elevforhold", NONE_TO_MANY),
+            KONTAKTLARERGRUPPE("kontaktlarergruppe", "no.fint.model.utdanning.elev.Kontaktlarergruppe", NONE_TO_MANY),
+            SKOLERESSURS("skoleressurs", "no.fint.model.utdanning.elev.Skoleressurs", NONE_TO_MANY),
+            UNDERVISNINGSFORHOLD("undervisningsforhold", "no.fint.model.utdanning.elev.Undervisningsforhold", NONE_TO_MANY),
+            FAGGRUPPE("faggruppe", "no.fint.model.utdanning.timeplan.Faggruppe", NONE_TO_MANY),
+            UNDERVISNINGSGRUPPE("undervisningsgruppe", "no.fint.model.utdanning.timeplan.Undervisningsgruppe", NONE_TO_MANY),
+            EKSAMENSGRUPPE("eksamensgruppe", "no.fint.model.utdanning.vurdering.Eksamensgruppe", NONE_TO_MANY),
+            UTDANNINGSPROGRAM("utdanningsprogram", "no.fint.model.utdanning.utdanningsprogram.Utdanningsprogram", NONE_TO_MANY);
 	
-        private final String typeName;
-        private final String multiplicity;
+		private final String name;
+        private final String packageName;
+        private final FintMultiplicity multiplicity;
 
-        private Relasjonsnavn(String typeName, String multiplicity) {
-            this.typeName = typeName;
+        private Relasjonsnavn(String name, String packageName, FintMultiplicity multiplicity) {
+			this.name = name;
+            this.packageName = packageName;
             this.multiplicity = multiplicity;
         }
     }
 
-	
-	@JsonIgnore
 	public Map<String, FintIdentifikator> getIdentifikators() {
     	Map<String, FintIdentifikator> identifikators = new HashMap<>();
 		identifikators.putAll(super.getIdentifikators());
@@ -58,8 +66,8 @@ public class Skole extends Enhet  implements FintMainObject {
     
     	return identifikators;
 	}
-
-
+	@JsonIgnore
+	private final List<FintRelation> relations = new ArrayList<>(List.of(Relasjonsnavn.values()));
     private String domenenavn;
     private String juridiskNavn;
     @NotBlank

@@ -7,14 +7,22 @@ import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Getter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import no.fint.model.FintMultiplicity;
 import no.fint.model.felles.kompleksedatatyper.Identifikator;
 import no.fint.model.FintComplexDatatypeObject;
 import no.fint.model.FintIdentifikator;
+import no.fint.model.FintRelation;
+
+import static no.fint.model.FintMultiplicity.ONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.ONE_TO_MANY;
+import static no.fint.model.FintMultiplicity.NONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.NONE_TO_MANY;
 
 @Data
 @NoArgsConstructor
@@ -22,37 +30,32 @@ import no.fint.model.FintIdentifikator;
 @ToString
 public class Kontostreng  implements FintComplexDatatypeObject {
     @Getter
-    public enum Relasjonsnavn {
-            AKTIVITET("no.fint.model.administrasjon.kodeverk.Aktivitet", "0..1"),
-            ANLEGG("no.fint.model.administrasjon.kodeverk.Anlegg", "0..1"),
-            ANSVAR("no.fint.model.administrasjon.kodeverk.Ansvar", "1"),
-            ART("no.fint.model.administrasjon.kodeverk.Art", "1"),
-            DIVERSE("no.fint.model.administrasjon.kodeverk.Diverse", "0..1"),
-            FORMAL("no.fint.model.administrasjon.kodeverk.Formal", "0..1"),
-            FUNKSJON("no.fint.model.administrasjon.kodeverk.Funksjon", "1"),
-            KONTRAKT("no.fint.model.administrasjon.kodeverk.Kontrakt", "0..1"),
-            LOPENUMMER("no.fint.model.administrasjon.kodeverk.Lopenummer", "0..1"),
-            OBJEKT("no.fint.model.administrasjon.kodeverk.Objekt", "0..1"),
-            PROSJEKT("no.fint.model.administrasjon.kodeverk.Prosjekt", "0..1"),
-            PROSJEKTART("no.fint.model.administrasjon.kodeverk.Prosjektart", "0..1"),
-            RAMME("no.fint.model.administrasjon.kodeverk.Ramme", "0..1");
+    public enum Relasjonsnavn implements FintRelation {
+            AKTIVITET("aktivitet", "no.fint.model.administrasjon.kodeverk.Aktivitet", NONE_TO_ONE),
+            ANLEGG("anlegg", "no.fint.model.administrasjon.kodeverk.Anlegg", NONE_TO_ONE),
+            ANSVAR("ansvar", "no.fint.model.administrasjon.kodeverk.Ansvar", ONE_TO_ONE),
+            ART("art", "no.fint.model.administrasjon.kodeverk.Art", ONE_TO_ONE),
+            DIVERSE("diverse", "no.fint.model.administrasjon.kodeverk.Diverse", NONE_TO_ONE),
+            FORMAL("formal", "no.fint.model.administrasjon.kodeverk.Formal", NONE_TO_ONE),
+            FUNKSJON("funksjon", "no.fint.model.administrasjon.kodeverk.Funksjon", ONE_TO_ONE),
+            KONTRAKT("kontrakt", "no.fint.model.administrasjon.kodeverk.Kontrakt", NONE_TO_ONE),
+            LOPENUMMER("lopenummer", "no.fint.model.administrasjon.kodeverk.Lopenummer", NONE_TO_ONE),
+            OBJEKT("objekt", "no.fint.model.administrasjon.kodeverk.Objekt", NONE_TO_ONE),
+            PROSJEKT("prosjekt", "no.fint.model.administrasjon.kodeverk.Prosjekt", NONE_TO_ONE),
+            PROSJEKTART("prosjektart", "no.fint.model.administrasjon.kodeverk.Prosjektart", NONE_TO_ONE),
+            RAMME("ramme", "no.fint.model.administrasjon.kodeverk.Ramme", NONE_TO_ONE);
 	
-        private final String typeName;
-        private final String multiplicity;
+		private final String name;
+        private final String packageName;
+        private final FintMultiplicity multiplicity;
 
-        private Relasjonsnavn(String typeName, String multiplicity) {
-            this.typeName = typeName;
+        private Relasjonsnavn(String name, String packageName, FintMultiplicity multiplicity) {
+			this.name = name;
+            this.packageName = packageName;
             this.multiplicity = multiplicity;
         }
     }
 
-	
 	@JsonIgnore
-	public Map<String, FintIdentifikator> getIdentifikators() {
-    	Map<String, FintIdentifikator> identifikators = new HashMap<>();
-    
-    	return identifikators;
-	}
-
-
+	private final List<FintRelation> relations = new ArrayList<>(List.of(Relasjonsnavn.values()));
 }

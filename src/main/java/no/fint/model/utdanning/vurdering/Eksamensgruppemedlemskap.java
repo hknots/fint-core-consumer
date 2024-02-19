@@ -7,15 +7,23 @@ import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Getter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import no.fint.model.FintMultiplicity;
 import no.fint.model.felles.kompleksedatatyper.Identifikator;
 import no.fint.model.FintMainObject;
 import no.fint.model.FintIdentifikator;
+import no.fint.model.FintRelation;
 import no.fint.model.utdanning.basisklasser.Gruppemedlemskap;
+
+import static no.fint.model.FintMultiplicity.ONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.ONE_TO_MANY;
+import static no.fint.model.FintMultiplicity.NONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.NONE_TO_MANY;
 
 @Data
 @NoArgsConstructor
@@ -23,33 +31,33 @@ import no.fint.model.utdanning.basisklasser.Gruppemedlemskap;
 @ToString(callSuper=true)
 public class Eksamensgruppemedlemskap extends Gruppemedlemskap  implements FintMainObject {
     @Getter
-    public enum Relasjonsnavn {
-            DELEGERTTIL("no.fint.model.felles.kodeverk.Fylke", "0..1"),
-            ELEVFORHOLD("no.fint.model.utdanning.elev.Elevforhold", "1"),
-            FORETRUKKETSKOLE("no.fint.model.utdanning.utdanningsprogram.Skole", "0..1"),
-            EKSAMENSGRUPPE("no.fint.model.utdanning.vurdering.Eksamensgruppe", "1"),
-            NUS("no.fint.model.utdanning.kodeverk.Karakterstatus", "0..1"),
-            FORETRUKKETSENSOR("no.fint.model.utdanning.vurdering.Sensor", "0..1");
+    public enum Relasjonsnavn implements FintRelation {
+            DELEGERTTIL("delegertTil", "no.fint.model.felles.kodeverk.Fylke", NONE_TO_ONE),
+            ELEVFORHOLD("elevforhold", "no.fint.model.utdanning.elev.Elevforhold", ONE_TO_ONE),
+            FORETRUKKETSKOLE("foretrukketSkole", "no.fint.model.utdanning.utdanningsprogram.Skole", NONE_TO_ONE),
+            EKSAMENSGRUPPE("eksamensgruppe", "no.fint.model.utdanning.vurdering.Eksamensgruppe", ONE_TO_ONE),
+            NUS("nus", "no.fint.model.utdanning.kodeverk.Karakterstatus", NONE_TO_ONE),
+            FORETRUKKETSENSOR("foretrukketSensor", "no.fint.model.utdanning.vurdering.Sensor", NONE_TO_ONE);
 	
-        private final String typeName;
-        private final String multiplicity;
+		private final String name;
+        private final String packageName;
+        private final FintMultiplicity multiplicity;
 
-        private Relasjonsnavn(String typeName, String multiplicity) {
-            this.typeName = typeName;
+        private Relasjonsnavn(String name, String packageName, FintMultiplicity multiplicity) {
+			this.name = name;
+            this.packageName = packageName;
             this.multiplicity = multiplicity;
         }
     }
 
-	
-	@JsonIgnore
 	public Map<String, FintIdentifikator> getIdentifikators() {
     	Map<String, FintIdentifikator> identifikators = new HashMap<>();
 		identifikators.putAll(super.getIdentifikators());
     
     	return identifikators;
 	}
-
-
+	@JsonIgnore
+	private final List<FintRelation> relations = new ArrayList<>(List.of(Relasjonsnavn.values()));
     private Boolean delegert;
     private String kandidatnummer;
 }

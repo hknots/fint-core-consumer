@@ -7,16 +7,24 @@ import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Getter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import no.fint.model.FintMultiplicity;
 import no.fint.model.felles.kompleksedatatyper.Identifikator;
 import no.fint.model.FintMainObject;
 import no.fint.model.FintIdentifikator;
+import no.fint.model.FintRelation;
 import no.fint.model.felles.kompleksedatatyper.Periode;
 import no.fint.model.felles.kompleksedatatyper.Identifikator;
+
+import static no.fint.model.FintMultiplicity.ONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.ONE_TO_MANY;
+import static no.fint.model.FintMultiplicity.NONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.NONE_TO_MANY;
 
 @Data
 @NoArgsConstructor
@@ -24,52 +32,52 @@ import no.fint.model.felles.kompleksedatatyper.Identifikator;
 @ToString
 public class Arbeidsforhold  implements FintMainObject {
     @Getter
-    public enum Relasjonsnavn {
-            AKTIVITET("no.fint.model.administrasjon.kodeverk.Aktivitet", "0..1"),
-            ANLEGG("no.fint.model.administrasjon.kodeverk.Anlegg", "0..1"),
-            ANSVAR("no.fint.model.administrasjon.kodeverk.Ansvar", "0..1"),
-            ARBEIDSFORHOLDSTYPE("no.fint.model.administrasjon.kodeverk.Arbeidsforholdstype", "0..1"),
-            ART("no.fint.model.administrasjon.kodeverk.Art", "0..1"),
-            DIVERSE("no.fint.model.administrasjon.kodeverk.Diverse", "0..1"),
-            FORMAL("no.fint.model.administrasjon.kodeverk.Formal", "0..1"),
-            FUNKSJON("no.fint.model.administrasjon.kodeverk.Funksjon", "0..1"),
-            KONTRAKT("no.fint.model.administrasjon.kodeverk.Kontrakt", "0..1"),
-            LOPENUMMER("no.fint.model.administrasjon.kodeverk.Lopenummer", "0..1"),
-            OBJEKT("no.fint.model.administrasjon.kodeverk.Objekt", "0..1"),
-            PROSJEKT("no.fint.model.administrasjon.kodeverk.Prosjekt", "0..1"),
-            RAMME("no.fint.model.administrasjon.kodeverk.Ramme", "0..1"),
-            STILLINGSKODE("no.fint.model.administrasjon.kodeverk.Stillingskode", "0..1"),
-            TIMERPERUKE("no.fint.model.administrasjon.kodeverk.Uketimetall", "0..1"),
-            ARBEIDSLOKASJON("no.fint.model.administrasjon.organisasjon.Arbeidslokasjon", "0..1"),
-            ARBEIDSSTED("no.fint.model.administrasjon.organisasjon.Organisasjonselement", "1"),
-            PERSONALLEDER("no.fint.model.administrasjon.personal.Personalressurs", "0..1"),
-            FASTLONN("no.fint.model.administrasjon.personal.Fastlonn", "0..*"),
-            FASTTILLEGG("no.fint.model.administrasjon.personal.Fasttillegg", "0..*"),
-            FRAVAR("no.fint.model.administrasjon.personal.Fravar", "0..*"),
-            LONN("no.fint.model.administrasjon.personal.Lonn", "0..*"),
-            VARIABELLONN("no.fint.model.administrasjon.personal.Variabellonn", "0..*"),
-            PERSONALRESSURS("no.fint.model.administrasjon.personal.Personalressurs", "1"),
-            UNDERVISNINGSFORHOLD("no.fint.model.utdanning.elev.Undervisningsforhold", "0..1");
+    public enum Relasjonsnavn implements FintRelation {
+            AKTIVITET("aktivitet", "no.fint.model.administrasjon.kodeverk.Aktivitet", NONE_TO_ONE),
+            ANLEGG("anlegg", "no.fint.model.administrasjon.kodeverk.Anlegg", NONE_TO_ONE),
+            ANSVAR("ansvar", "no.fint.model.administrasjon.kodeverk.Ansvar", NONE_TO_ONE),
+            ARBEIDSFORHOLDSTYPE("arbeidsforholdstype", "no.fint.model.administrasjon.kodeverk.Arbeidsforholdstype", NONE_TO_ONE),
+            ART("art", "no.fint.model.administrasjon.kodeverk.Art", NONE_TO_ONE),
+            DIVERSE("diverse", "no.fint.model.administrasjon.kodeverk.Diverse", NONE_TO_ONE),
+            FORMAL("formal", "no.fint.model.administrasjon.kodeverk.Formal", NONE_TO_ONE),
+            FUNKSJON("funksjon", "no.fint.model.administrasjon.kodeverk.Funksjon", NONE_TO_ONE),
+            KONTRAKT("kontrakt", "no.fint.model.administrasjon.kodeverk.Kontrakt", NONE_TO_ONE),
+            LOPENUMMER("lopenummer", "no.fint.model.administrasjon.kodeverk.Lopenummer", NONE_TO_ONE),
+            OBJEKT("objekt", "no.fint.model.administrasjon.kodeverk.Objekt", NONE_TO_ONE),
+            PROSJEKT("prosjekt", "no.fint.model.administrasjon.kodeverk.Prosjekt", NONE_TO_ONE),
+            RAMME("ramme", "no.fint.model.administrasjon.kodeverk.Ramme", NONE_TO_ONE),
+            STILLINGSKODE("stillingskode", "no.fint.model.administrasjon.kodeverk.Stillingskode", NONE_TO_ONE),
+            TIMERPERUKE("timerPerUke", "no.fint.model.administrasjon.kodeverk.Uketimetall", NONE_TO_ONE),
+            ARBEIDSLOKASJON("arbeidslokasjon", "no.fint.model.administrasjon.organisasjon.Arbeidslokasjon", NONE_TO_ONE),
+            ARBEIDSSTED("arbeidssted", "no.fint.model.administrasjon.organisasjon.Organisasjonselement", ONE_TO_ONE),
+            PERSONALLEDER("personalleder", "no.fint.model.administrasjon.personal.Personalressurs", NONE_TO_ONE),
+            FASTLONN("fastlonn", "no.fint.model.administrasjon.personal.Fastlonn", NONE_TO_MANY),
+            FASTTILLEGG("fasttillegg", "no.fint.model.administrasjon.personal.Fasttillegg", NONE_TO_MANY),
+            FRAVAR("fravar", "no.fint.model.administrasjon.personal.Fravar", NONE_TO_MANY),
+            LONN("lonn", "no.fint.model.administrasjon.personal.Lonn", NONE_TO_MANY),
+            VARIABELLONN("variabellonn", "no.fint.model.administrasjon.personal.Variabellonn", NONE_TO_MANY),
+            PERSONALRESSURS("personalressurs", "no.fint.model.administrasjon.personal.Personalressurs", ONE_TO_ONE),
+            UNDERVISNINGSFORHOLD("undervisningsforhold", "no.fint.model.utdanning.elev.Undervisningsforhold", NONE_TO_ONE);
 	
-        private final String typeName;
-        private final String multiplicity;
+		private final String name;
+        private final String packageName;
+        private final FintMultiplicity multiplicity;
 
-        private Relasjonsnavn(String typeName, String multiplicity) {
-            this.typeName = typeName;
+        private Relasjonsnavn(String name, String packageName, FintMultiplicity multiplicity) {
+			this.name = name;
+            this.packageName = packageName;
             this.multiplicity = multiplicity;
         }
     }
 
-	
-	@JsonIgnore
 	public Map<String, FintIdentifikator> getIdentifikators() {
     	Map<String, FintIdentifikator> identifikators = new HashMap<>();
 		identifikators.put("systemId", this.systemId);
     
     	return identifikators;
 	}
-
-
+	@JsonIgnore
+	private final List<FintRelation> relations = new ArrayList<>(List.of(Relasjonsnavn.values()));
     @NotNull
     private Long ansettelsesprosent;
     private @Valid Periode arbeidsforholdsperiode;

@@ -7,15 +7,23 @@ import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Getter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import no.fint.model.FintMultiplicity;
 import no.fint.model.felles.kompleksedatatyper.Identifikator;
 import no.fint.model.FintMainObject;
 import no.fint.model.FintIdentifikator;
+import no.fint.model.FintRelation;
 import no.fint.model.felles.kompleksedatatyper.Identifikator;
+
+import static no.fint.model.FintMultiplicity.ONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.ONE_TO_MANY;
+import static no.fint.model.FintMultiplicity.NONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.NONE_TO_MANY;
 
 @Data
 @NoArgsConstructor
@@ -23,24 +31,24 @@ import no.fint.model.felles.kompleksedatatyper.Identifikator;
 @ToString
 public class Skoleressurs  implements FintMainObject {
     @Getter
-    public enum Relasjonsnavn {
-            PERSON("no.fint.model.felles.Person", "0..1"),
-            PERSONALRESSURS("no.fint.model.administrasjon.personal.Personalressurs", "1"),
-            UNDERVISNINGSFORHOLD("no.fint.model.utdanning.elev.Undervisningsforhold", "0..*"),
-            SKOLE("no.fint.model.utdanning.utdanningsprogram.Skole", "0..*"),
-            SENSOR("no.fint.model.utdanning.vurdering.Sensor", "0..*");
+    public enum Relasjonsnavn implements FintRelation {
+            PERSON("person", "no.fint.model.felles.Person", NONE_TO_ONE),
+            PERSONALRESSURS("personalressurs", "no.fint.model.administrasjon.personal.Personalressurs", ONE_TO_ONE),
+            UNDERVISNINGSFORHOLD("undervisningsforhold", "no.fint.model.utdanning.elev.Undervisningsforhold", NONE_TO_MANY),
+            SKOLE("skole", "no.fint.model.utdanning.utdanningsprogram.Skole", NONE_TO_MANY),
+            SENSOR("sensor", "no.fint.model.utdanning.vurdering.Sensor", NONE_TO_MANY);
 	
-        private final String typeName;
-        private final String multiplicity;
+		private final String name;
+        private final String packageName;
+        private final FintMultiplicity multiplicity;
 
-        private Relasjonsnavn(String typeName, String multiplicity) {
-            this.typeName = typeName;
+        private Relasjonsnavn(String name, String packageName, FintMultiplicity multiplicity) {
+			this.name = name;
+            this.packageName = packageName;
             this.multiplicity = multiplicity;
         }
     }
 
-	
-	@JsonIgnore
 	public Map<String, FintIdentifikator> getIdentifikators() {
     	Map<String, FintIdentifikator> identifikators = new HashMap<>();
 		identifikators.put("feidenavn", this.feidenavn);
@@ -48,8 +56,8 @@ public class Skoleressurs  implements FintMainObject {
     
     	return identifikators;
 	}
-
-
+	@JsonIgnore
+	private final List<FintRelation> relations = new ArrayList<>(List.of(Relasjonsnavn.values()));
     private @Valid Identifikator feidenavn;
     @NotNull
     private @Valid Identifikator systemId;

@@ -7,14 +7,22 @@ import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Getter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import no.fint.model.FintMultiplicity;
 import no.fint.model.felles.kompleksedatatyper.Identifikator;
 import no.fint.model.FintComplexDatatypeObject;
 import no.fint.model.FintIdentifikator;
+import no.fint.model.FintRelation;
+
+import static no.fint.model.FintMultiplicity.ONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.ONE_TO_MANY;
+import static no.fint.model.FintMultiplicity.NONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.NONE_TO_MANY;
 
 @Data
 @NoArgsConstructor
@@ -22,30 +30,25 @@ import no.fint.model.FintIdentifikator;
 @ToString
 public class Dokumentobjekt  implements FintComplexDatatypeObject {
     @Getter
-    public enum Relasjonsnavn {
-            FILFORMAT("no.fint.model.arkiv.kodeverk.Format", "0..1"),
-            VARIANTFORMAT("no.fint.model.arkiv.kodeverk.Variantformat", "1"),
-            OPPRETTETAV("no.fint.model.arkiv.noark.Arkivressurs", "1"),
-            REFERANSEDOKUMENTFIL("no.fint.model.arkiv.noark.Dokumentfil", "0..1");
+    public enum Relasjonsnavn implements FintRelation {
+            FILFORMAT("filformat", "no.fint.model.arkiv.kodeverk.Format", NONE_TO_ONE),
+            VARIANTFORMAT("variantFormat", "no.fint.model.arkiv.kodeverk.Variantformat", ONE_TO_ONE),
+            OPPRETTETAV("opprettetAv", "no.fint.model.arkiv.noark.Arkivressurs", ONE_TO_ONE),
+            REFERANSEDOKUMENTFIL("referanseDokumentfil", "no.fint.model.arkiv.noark.Dokumentfil", NONE_TO_ONE);
 	
-        private final String typeName;
-        private final String multiplicity;
+		private final String name;
+        private final String packageName;
+        private final FintMultiplicity multiplicity;
 
-        private Relasjonsnavn(String typeName, String multiplicity) {
-            this.typeName = typeName;
+        private Relasjonsnavn(String name, String packageName, FintMultiplicity multiplicity) {
+			this.name = name;
+            this.packageName = packageName;
             this.multiplicity = multiplicity;
         }
     }
 
-	
 	@JsonIgnore
-	public Map<String, FintIdentifikator> getIdentifikators() {
-    	Map<String, FintIdentifikator> identifikators = new HashMap<>();
-    
-    	return identifikators;
-	}
-
-
+	private final List<FintRelation> relations = new ArrayList<>(List.of(Relasjonsnavn.values()));
     private String filstorrelse;
     @Deprecated
     private String format;

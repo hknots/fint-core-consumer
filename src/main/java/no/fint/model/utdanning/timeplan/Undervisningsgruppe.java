@@ -7,15 +7,23 @@ import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Getter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import no.fint.model.FintMultiplicity;
 import no.fint.model.felles.kompleksedatatyper.Identifikator;
 import no.fint.model.FintMainObject;
 import no.fint.model.FintIdentifikator;
+import no.fint.model.FintRelation;
 import no.fint.model.utdanning.basisklasser.Gruppe;
+
+import static no.fint.model.FintMultiplicity.ONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.ONE_TO_MANY;
+import static no.fint.model.FintMultiplicity.NONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.NONE_TO_MANY;
 
 @Data
 @NoArgsConstructor
@@ -23,33 +31,33 @@ import no.fint.model.utdanning.basisklasser.Gruppe;
 @ToString(callSuper=true)
 public class Undervisningsgruppe extends Gruppe  implements FintMainObject {
     @Getter
-    public enum Relasjonsnavn {
-            ELEVFORHOLD("no.fint.model.utdanning.elev.Elevforhold", "0..*"),
-            FAG("no.fint.model.utdanning.timeplan.Fag", "1..*"),
-            TERMIN("no.fint.model.utdanning.kodeverk.Termin", "0..*"),
-            SKOLE("no.fint.model.utdanning.utdanningsprogram.Skole", "1"),
-            SKOLEAR("no.fint.model.utdanning.kodeverk.Skolear", "0..1"),
-            UNDERVISNINGSFORHOLD("no.fint.model.utdanning.elev.Undervisningsforhold", "0..*"),
-            TIME("no.fint.model.utdanning.timeplan.Time", "0..*"),
-            GRUPPEMEDLEMSKAP("no.fint.model.utdanning.timeplan.Undervisningsgruppemedlemskap", "0..*");
+    public enum Relasjonsnavn implements FintRelation {
+            ELEVFORHOLD("elevforhold", "no.fint.model.utdanning.elev.Elevforhold", NONE_TO_MANY),
+            FAG("fag", "no.fint.model.utdanning.timeplan.Fag", ONE_TO_MANY),
+            TERMIN("termin", "no.fint.model.utdanning.kodeverk.Termin", NONE_TO_MANY),
+            SKOLE("skole", "no.fint.model.utdanning.utdanningsprogram.Skole", ONE_TO_ONE),
+            SKOLEAR("skolear", "no.fint.model.utdanning.kodeverk.Skolear", NONE_TO_ONE),
+            UNDERVISNINGSFORHOLD("undervisningsforhold", "no.fint.model.utdanning.elev.Undervisningsforhold", NONE_TO_MANY),
+            TIME("time", "no.fint.model.utdanning.timeplan.Time", NONE_TO_MANY),
+            GRUPPEMEDLEMSKAP("gruppemedlemskap", "no.fint.model.utdanning.timeplan.Undervisningsgruppemedlemskap", NONE_TO_MANY);
 	
-        private final String typeName;
-        private final String multiplicity;
+		private final String name;
+        private final String packageName;
+        private final FintMultiplicity multiplicity;
 
-        private Relasjonsnavn(String typeName, String multiplicity) {
-            this.typeName = typeName;
+        private Relasjonsnavn(String name, String packageName, FintMultiplicity multiplicity) {
+			this.name = name;
+            this.packageName = packageName;
             this.multiplicity = multiplicity;
         }
     }
 
-	
-	@JsonIgnore
 	public Map<String, FintIdentifikator> getIdentifikators() {
     	Map<String, FintIdentifikator> identifikators = new HashMap<>();
 		identifikators.putAll(super.getIdentifikators());
     
     	return identifikators;
 	}
-
-
+	@JsonIgnore
+	private final List<FintRelation> relations = new ArrayList<>(List.of(Relasjonsnavn.values()));
 }

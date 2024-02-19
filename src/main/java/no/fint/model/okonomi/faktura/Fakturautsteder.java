@@ -7,15 +7,23 @@ import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Getter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import no.fint.model.FintMultiplicity;
 import no.fint.model.felles.kompleksedatatyper.Identifikator;
 import no.fint.model.FintMainObject;
 import no.fint.model.FintIdentifikator;
+import no.fint.model.FintRelation;
 import no.fint.model.felles.kompleksedatatyper.Identifikator;
+
+import static no.fint.model.FintMultiplicity.ONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.ONE_TO_MANY;
+import static no.fint.model.FintMultiplicity.NONE_TO_ONE;
+import static no.fint.model.FintMultiplicity.NONE_TO_MANY;
 
 @Data
 @NoArgsConstructor
@@ -23,30 +31,30 @@ import no.fint.model.felles.kompleksedatatyper.Identifikator;
 @ToString
 public class Fakturautsteder  implements FintMainObject {
     @Getter
-    public enum Relasjonsnavn {
-            ORGANISASJONSELEMENT("no.fint.model.administrasjon.organisasjon.Organisasjonselement", "0..1"),
-            FAKTURAGRUNNLAG("no.fint.model.okonomi.faktura.Fakturagrunnlag", "0..*"),
-            VARE("no.fint.model.okonomi.kodeverk.Vare", "0..*");
+    public enum Relasjonsnavn implements FintRelation {
+            ORGANISASJONSELEMENT("organisasjonselement", "no.fint.model.administrasjon.organisasjon.Organisasjonselement", NONE_TO_ONE),
+            FAKTURAGRUNNLAG("fakturagrunnlag", "no.fint.model.okonomi.faktura.Fakturagrunnlag", NONE_TO_MANY),
+            VARE("vare", "no.fint.model.okonomi.kodeverk.Vare", NONE_TO_MANY);
 	
-        private final String typeName;
-        private final String multiplicity;
+		private final String name;
+        private final String packageName;
+        private final FintMultiplicity multiplicity;
 
-        private Relasjonsnavn(String typeName, String multiplicity) {
-            this.typeName = typeName;
+        private Relasjonsnavn(String name, String packageName, FintMultiplicity multiplicity) {
+			this.name = name;
+            this.packageName = packageName;
             this.multiplicity = multiplicity;
         }
     }
 
-	
-	@JsonIgnore
 	public Map<String, FintIdentifikator> getIdentifikators() {
     	Map<String, FintIdentifikator> identifikators = new HashMap<>();
 		identifikators.put("systemId", this.systemId);
     
     	return identifikators;
 	}
-
-
+	@JsonIgnore
+	private final List<FintRelation> relations = new ArrayList<>(List.of(Relasjonsnavn.values()));
     @NotBlank
     private String navn;
     @NotNull
