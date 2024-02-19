@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -21,16 +22,16 @@ public class CacheConfig {
         resources.forEach(clazz -> {
             try {
                 FintMainObject instance = clazz.getDeclaredConstructor().newInstance();
-                ConcurrentHashMap<String, ConcurrentHashMap<String, CacheObject>> idMapper = new ConcurrentHashMap<>();
 
+                ConcurrentHashMap<String, LinkedHashMap<String, CacheObject>> idMapper = new ConcurrentHashMap<>();
                 instance.getIdentifikators().keySet().forEach(idField -> {
-                    idMapper.put(idField, new ConcurrentHashMap<>());
+                    idMapper.put(idField, new LinkedHashMap<>());
                 });
 
                 resourceCache.put(clazz.getSimpleName().toLowerCase(), new CoreCache(idMapper));
             } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
                      InvocationTargetException e) {
-                log.error("Error generating resourceCache: {}", e.getMessage());
+                log.error("Error generating resourceCache: {} - {}", e.getMessage(), clazz.getSimpleName());
             }
         });
         return resourceCache;
